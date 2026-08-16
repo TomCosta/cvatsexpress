@@ -1,0 +1,79 @@
+# ==========================================
+# 📐 Ecossistema Angular & TypeScript
+# ==========================================
+.angular/                     # Cache de compilação do Ivy (essencial ignorar)
+dist/                         # Saída padrão de build do Angular
+out-tsc/                      # Arquivos temporários do compilador TS
+tmp/                          # Arquivos temporários de execução
+coverage/                     # Relatórios de testes (Karma/Jasmine/Jest)
+.sass-cache/                  # Cache de pré-processamento de estilos SASS
+*.tsbuildinfo                 # Cache de builds incrementais do TypeScript
+.angular/cache/
+www/
+
+# ==========================================
+# 📱 Saída Web do Ionic
+# ==========================================
+www/                          # Pasta onde o Ionic compila a SPA (o Capacitor lê daqui)
+
+# ==========================================
+# 📦 Dependências e Artefatos do Node
+# ==========================================
+node_modules/
+bin/
+obj/
+
+# ==========================================
+# 📝 Arquivos de Log e Cache de Execução
+# ==========================================
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+capacitor-build.log
+.gradle/
+
+# ==========================================
+# 🔐 Segurança e Configurações Locais
+# ==========================================
+.env
+.env.local
+.env.*.local
+local.properties
+
+# ==========================================
+# 💻 Sistemas Operacionais
+# ==========================================
+.DS_Store
+Thumbs.db
+
+# ==========================================
+# 🛠️ IDEs e Editores de Código
+# ==========================================
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw*
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+!.vscode/tasks.json
+
+# ==========================================
+# 🤖 Capacitor Nativo (Android e iOS)
+# ==========================================
+# ATENÇÃO: As pastas raiz android/ e ios/ DEVEM ser commitadas. 
+# Ignoramos apenas os arquivos temporários e caches gerados pelas IDEs nativas:
+
+android/app/build/
+android/.gradle/
+android/local.properties
+android/captures/
+android/app/app.iml
+android/.idea/
+
+ios/App/Pods/
+ios/App/Podfile.lock
+ios/App/DerivedData/
+ios/App/build/

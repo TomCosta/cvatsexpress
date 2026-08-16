@@ -1,0 +1,19 @@
+<ion-app>
+  <ion-split-pane contentId="main-content">
+    <ion-menu contentId="main-content" type="overlay">
+      <ion-content>
+        <ion-list id="inbox-list">
+          <ion-list-header>CV ATS Express</ion-list-header>
+          <ion-note>user&#64;gmail.com</ion-note>
+            <ion-menu-toggle auto-hide="false">
+              <ion-item button (click)="goToHome()" lines="none" detail="false" routerLinkActive="selected">
+                <ion-icon color="secondary" aria-hidden="true" slot="start" [src]="icon.home"></ion-icon>
+                <ion-label>início</ion-label>
+              </ion-item>
+            </ion-menu-toggle>
+        </ion-list>
+      </ion-content>
+    </ion-menu>
+    <ion-router-outlet id="main-content"></ion-router-outlet>
+  </ion-split-pane>
+</ion-app>

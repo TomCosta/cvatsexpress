@@ -1,0 +1,7 @@
+{
+  "name": "cvAtsExpress",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}
