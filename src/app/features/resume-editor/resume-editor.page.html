@@ -1,0 +1,219 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/resumes" text=""></ion-back-button>
+    </ion-buttons>
+    <ion-title>Editar currículo</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="openPreview()" [disabled]="loading() || !!loadError()">
+        <ion-icon name="eye-outline" slot="start"></ion-icon>
+        Visualizar
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <main class="editor-shell">
+    @if (loading()) {
+      <p class="state-message" role="status">Carregando currículo…</p>
+    } @else if (loadError()) {
+      <section class="state-card" role="alert">
+        <h1>Não foi possível abrir</h1>
+        <p>{{ loadError() }}</p>
+        <ion-button routerLink="/resumes">Voltar aos currículos</ion-button>
+      </section>
+    } @else {
+      <form [formGroup]="form" novalidate>
+        <div class="editor-intro">
+          <div>
+            <p class="eyebrow">Editor offline</p>
+            <h1>Conte sua trajetória com clareza.</h1>
+          </div>
+          <p class="save-state" aria-live="polite">{{ saveMessage() }}</p>
+        </div>
+
+        <section class="form-section" aria-labelledby="document-title">
+          <div class="section-heading">
+            <div>
+              <p class="section-step">Documento</p>
+              <h2 id="document-title">Identificação</h2>
+            </div>
+          </div>
+          <ion-list lines="none">
+            <ion-item>
+              <ion-input formControlName="title" label="Nome do currículo" labelPlacement="stacked" maxlength="80"></ion-input>
+              @if (form.controls.title.touched && form.controls.title.invalid) {
+                <ion-note color="danger">Informe um nome para identificar este currículo.</ion-note>
+              }
+            </ion-item>
+            <ion-item>
+              <ion-select formControlName="language" label="Idioma" labelPlacement="stacked">
+                <ion-select-option value="pt-BR">Português (Brasil)</ion-select-option>
+                <ion-select-option value="en-US">Inglês (Estados Unidos)</ion-select-option>
+                <ion-select-option value="es-ES">Espanhol (Espanha)</ion-select-option>
+                <ion-select-option value="es-419">Espanhol (América Latina)</ion-select-option>
+              </ion-select>
+            </ion-item>
+          </ion-list>
+        </section>
+
+        <section class="form-section" aria-labelledby="personal-title" formGroupName="personalInfo">
+          <div class="section-heading">
+            <div>
+              <p class="section-step">1 de 7</p>
+              <h2 id="personal-title">Dados pessoais</h2>
+            </div>
+          </div>
+          <ion-list lines="none" class="field-grid">
+            <ion-item class="field-grid__wide">
+              <ion-input formControlName="fullName" label="Nome completo *" labelPlacement="stacked" autocomplete="name"></ion-input>
+              @if (form.controls.personalInfo.controls.fullName.touched && form.controls.personalInfo.controls.fullName.invalid) {
+                <ion-note color="danger">Informe seu nome completo.</ion-note>
+              }
+            </ion-item>
+            <ion-item>
+              <ion-input formControlName="email" type="email" label="Email" labelPlacement="stacked" autocomplete="email"></ion-input>
+              @if (form.controls.personalInfo.controls.email.touched && form.controls.personalInfo.controls.email.invalid) {
+                <ion-note color="danger">Use um email válido.</ion-note>
+              }
+            </ion-item>
+            <ion-item>
+              <ion-input formControlName="phone" type="tel" label="Telefone" labelPlacement="stacked" autocomplete="tel"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-input formControlName="city" label="Cidade" labelPlacement="stacked" autocomplete="address-level2"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-input formControlName="state" label="Estado" labelPlacement="stacked" autocomplete="address-level1"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-input formControlName="country" label="País" labelPlacement="stacked" autocomplete="country-name"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-input formControlName="linkedin" type="url" label="LinkedIn" labelPlacement="stacked" placeholder="https://linkedin.com/in/..." inputmode="url"></ion-input>
+              @if (form.controls.personalInfo.controls.linkedin.touched && form.controls.personalInfo.controls.linkedin.invalid) {
+                <ion-note color="danger">Informe uma URL válida, como linkedin.com/in/seu-nome.</ion-note>
+              }
+            </ion-item>
+            <ion-item class="field-grid__wide">
+              <ion-input formControlName="portfolio" type="url" label="Portfólio" labelPlacement="stacked" placeholder="https://seusite.com" inputmode="url"></ion-input>
+              @if (form.controls.personalInfo.controls.portfolio.touched && form.controls.personalInfo.controls.portfolio.invalid) {
+                <ion-note color="danger">Informe uma URL válida, como seusite.com.</ion-note>
+              }
+            </ion-item>
+          </ion-list>
+        </section>
+
+        <section class="form-section" aria-labelledby="summary-title">
+          <div class="section-heading">
+            <div>
+              <p class="section-step">2 de 7</p>
+              <h2 id="summary-title">Objetivo e resumo</h2>
+            </div>
+          </div>
+          <ion-list lines="none">
+            <ion-item>
+              <ion-input formControlName="targetRole" label="Cargo desejado" labelPlacement="stacked" placeholder="Ex.: Desenvolvedora Front-end"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-textarea formControlName="professionalSummary" label="Resumo profissional" labelPlacement="stacked" autoGrow="true" rows="5" maxlength="1200" helperText="Destaque especialidade, experiência e resultados em 3 a 5 linhas."></ion-textarea>
+            </ion-item>
+          </ion-list>
+        </section>
+
+        <section class="form-section" aria-labelledby="experience-title">
+          <div class="section-heading">
+            <div>
+              <p class="section-step">3 de 7</p>
+              <h2 id="experience-title">Experiências</h2>
+            </div>
+            <ion-button fill="outline" size="small" (click)="addExperience()">
+              <ion-icon name="add-outline" slot="start"></ion-icon>Adicionar
+            </ion-button>
+          </div>
+          <div formArrayName="experiences" class="repeat-list">
+            @for (group of experiences.controls; track group.controls['id'].value; let index = $index) {
+              <article class="repeat-card" [formGroupName]="index">
+                <div class="repeat-card__toolbar">
+                  <strong>Experiência {{ index + 1 }}</strong>
+                  <div>
+                    <ion-button fill="clear" size="small" aria-label="Mover experiência para cima" [disabled]="index === 0" (click)="move(experiences, index, -1)"><ion-icon name="arrow-up-outline"></ion-icon></ion-button>
+                    <ion-button fill="clear" size="small" aria-label="Mover experiência para baixo" [disabled]="index === experiences.length - 1" (click)="move(experiences, index, 1)"><ion-icon name="arrow-down-outline"></ion-icon></ion-button>
+                    <ion-button fill="clear" color="danger" size="small" aria-label="Excluir experiência" (click)="remove(experiences, index)"><ion-icon name="trash-outline"></ion-icon></ion-button>
+                  </div>
+                </div>
+                <ion-list lines="none" class="field-grid">
+                  <ion-item><ion-input formControlName="role" label="Cargo" labelPlacement="stacked"></ion-input></ion-item>
+                  <ion-item><ion-input formControlName="company" label="Empresa" labelPlacement="stacked"></ion-input></ion-item>
+                  <ion-item><ion-input formControlName="location" label="Local" labelPlacement="stacked"></ion-input></ion-item>
+                  <ion-item><ion-input formControlName="startDate" label="Início" labelPlacement="stacked" placeholder="MM/AAAA"></ion-input></ion-item>
+                  <ion-item><ion-input formControlName="endDate" label="Fim" labelPlacement="stacked" placeholder="MM/AAAA"></ion-input></ion-item>
+                  <ion-item><ion-checkbox formControlName="current" labelPlacement="end">Trabalho atual</ion-checkbox></ion-item>
+                  <ion-item class="field-grid__wide"><ion-textarea formControlName="description" label="Responsabilidades e resultados" labelPlacement="stacked" autoGrow="true" rows="4" placeholder="Ex.: Implementei melhorias que reduziram o tempo de atendimento em 20%."></ion-textarea></ion-item>
+                </ion-list>
+              </article>
+            } @empty {
+              <p class="empty-repeat">Adicione emprego, projeto relevante ou trabalho voluntário.</p>
+            }
+          </div>
+        </section>
+
+        <section class="form-section" aria-labelledby="education-title">
+          <div class="section-heading">
+            <div><p class="section-step">4 de 7</p><h2 id="education-title">Formação</h2></div>
+            <ion-button fill="outline" size="small" (click)="addEducation()"><ion-icon name="add-outline" slot="start"></ion-icon>Adicionar</ion-button>
+          </div>
+          <div formArrayName="education" class="repeat-list">
+            @for (group of education.controls; track group.controls['id'].value; let index = $index) {
+              <article class="repeat-card" [formGroupName]="index">
+                <div class="repeat-card__toolbar"><strong>Formação {{ index + 1 }}</strong><div><ion-button fill="clear" size="small" aria-label="Mover formação para cima" [disabled]="index === 0" (click)="move(education, index, -1)"><ion-icon name="arrow-up-outline"></ion-icon></ion-button><ion-button fill="clear" size="small" aria-label="Mover formação para baixo" [disabled]="index === education.length - 1" (click)="move(education, index, 1)"><ion-icon name="arrow-down-outline"></ion-icon></ion-button><ion-button fill="clear" color="danger" size="small" aria-label="Excluir formação" (click)="remove(education, index)"><ion-icon name="trash-outline"></ion-icon></ion-button></div></div>
+                <ion-list lines="none" class="field-grid">
+                  <ion-item><ion-input formControlName="course" label="Curso" labelPlacement="stacked"></ion-input></ion-item>
+                  <ion-item><ion-input formControlName="institution" label="Instituição" labelPlacement="stacked"></ion-input></ion-item>
+                  <ion-item><ion-input formControlName="startDate" label="Início" labelPlacement="stacked" placeholder="AAAA"></ion-input></ion-item>
+                  <ion-item><ion-input formControlName="endDate" label="Fim" labelPlacement="stacked" placeholder="AAAA"></ion-input></ion-item>
+                  <ion-item class="field-grid__wide"><ion-textarea formControlName="description" label="Detalhes" labelPlacement="stacked" autoGrow="true"></ion-textarea></ion-item>
+                </ion-list>
+              </article>
+            } @empty { <p class="empty-repeat">Sua formação aparecerá aqui.</p> }
+          </div>
+        </section>
+
+        <section class="form-section" aria-labelledby="skills-title">
+          <div class="section-heading"><div><p class="section-step">5 de 7</p><h2 id="skills-title">Competências</h2></div><ion-button fill="outline" size="small" (click)="addSkill()"><ion-icon name="add-outline" slot="start"></ion-icon>Adicionar</ion-button></div>
+          <div formArrayName="skills" class="compact-list">
+            @for (group of skills.controls; track group.controls['id'].value; let index = $index) {
+              <div class="compact-row" [formGroupName]="index"><ion-item lines="none"><ion-input formControlName="name" label="Competência {{ index + 1 }}" labelPlacement="stacked" placeholder="Ex.: Gestão de projetos"></ion-input></ion-item><ion-button fill="clear" color="danger" aria-label="Excluir competência" (click)="remove(skills, index)"><ion-icon name="trash-outline"></ion-icon></ion-button></div>
+            } @empty { <p class="empty-repeat">Inclua competências relevantes para a vaga.</p> }
+          </div>
+        </section>
+
+        <section class="form-section" aria-labelledby="languages-title">
+          <div class="section-heading"><div><p class="section-step">6 de 7</p><h2 id="languages-title">Idiomas</h2></div><ion-button fill="outline" size="small" (click)="addLanguage()"><ion-icon name="add-outline" slot="start"></ion-icon>Adicionar</ion-button></div>
+          <div formArrayName="languages" class="compact-list">
+            @for (group of languages.controls; track group.controls['id'].value; let index = $index) {
+              <div class="compact-row compact-row--two" [formGroupName]="index"><ion-item lines="none"><ion-input formControlName="language" label="Idioma" labelPlacement="stacked"></ion-input></ion-item><ion-item lines="none"><ion-input formControlName="level" label="Nível" labelPlacement="stacked" placeholder="Ex.: Avançado"></ion-input></ion-item><ion-button fill="clear" color="danger" aria-label="Excluir idioma" (click)="remove(languages, index)"><ion-icon name="trash-outline"></ion-icon></ion-button></div>
+            } @empty { <p class="empty-repeat">Adicione os idiomas que você utiliza.</p> }
+          </div>
+        </section>
+
+        <section class="form-section" aria-labelledby="courses-title">
+          <div class="section-heading"><div><p class="section-step">7 de 7</p><h2 id="courses-title">Cursos e certificações</h2></div><ion-button fill="outline" size="small" (click)="addCourse()"><ion-icon name="add-outline" slot="start"></ion-icon>Adicionar</ion-button></div>
+          <div formArrayName="courses" class="repeat-list">
+            @for (group of courses.controls; track group.controls['id'].value; let index = $index) {
+              <article class="repeat-card" [formGroupName]="index"><div class="repeat-card__toolbar"><strong>Curso {{ index + 1 }}</strong><ion-button fill="clear" color="danger" size="small" aria-label="Excluir curso" (click)="remove(courses, index)"><ion-icon name="trash-outline"></ion-icon></ion-button></div><ion-list lines="none" class="field-grid"><ion-item><ion-input formControlName="name" label="Nome" labelPlacement="stacked"></ion-input></ion-item><ion-item><ion-input formControlName="institution" label="Instituição" labelPlacement="stacked"></ion-input></ion-item><ion-item><ion-input formControlName="year" label="Ano" labelPlacement="stacked"></ion-input></ion-item></ion-list></article>
+            } @empty { <p class="empty-repeat">Certificações relevantes fortalecem seu currículo.</p> }
+          </div>
+        </section>
+
+        <div class="editor-footer">
+          <p>{{ saveMessage() }}</p>
+          <ion-button size="large" (click)="openPreview()">
+            <ion-icon name="eye-outline" slot="start"></ion-icon>Visualizar currículo
+          </ion-button>
+        </div>
+      </form>
+    }
+  </main>
+</ion-content>

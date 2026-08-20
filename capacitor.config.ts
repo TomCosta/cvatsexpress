@@ -1,8 +1,8 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'io.ionic.starter',
-  appName: 'cvAtsExpress',
+  appId: 'com.cvatsexpress.app',
+  appName: 'CV ATS Express',
   webDir: 'www'
 };
 

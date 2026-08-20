@@ -1,20 +1,20 @@
 # ==========================================
 # 📐 Ecossistema Angular & TypeScript
 # ==========================================
-.angular/                     # Cache de compilação do Ivy (essencial ignorar)
-dist/                         # Saída padrão de build do Angular
-out-tsc/                      # Arquivos temporários do compilador TS
-tmp/                          # Arquivos temporários de execução
-coverage/                     # Relatórios de testes (Karma/Jasmine/Jest)
-.sass-cache/                  # Cache de pré-processamento de estilos SASS
-*.tsbuildinfo                 # Cache de builds incrementais do TypeScript
+.angular/
+dist/
+out-tsc/
+tmp/
+coverage/
+.sass-cache/
+*.tsbuildinfo
 .angular/cache/
 www/
 
 # ==========================================
 # 📱 Saída Web do Ionic
 # ==========================================
-www/                          # Pasta onde o Ionic compila a SPA (o Capacitor lê daqui)
+www/
 
 # ==========================================
 # 📦 Dependências e Artefatos do Node
@@ -37,7 +37,13 @@ capacitor-build.log
 # ==========================================
 .env
 .env.local
+.env.*
 .env.*.local
+!.env.example
+*.jks
+*.keystore
+google-services.json
+GoogleService-Info.plist
 local.properties
 
 # ==========================================

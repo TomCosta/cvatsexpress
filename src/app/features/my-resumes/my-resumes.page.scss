@@ -1,0 +1,25 @@
+ion-content { --background: #f4f7fb; }
+.resumes-shell { width: min(100%, 980px); margin: 0 auto; padding: 34px 18px 64px; }
+.page-heading { margin: 0 4px 28px; }
+.eyebrow { margin: 0 0 7px; color: var(--ion-color-primary); font-size: .74rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; }
+h1 { margin: 0; color: #10213a; font-size: clamp(2rem, 7vw, 3.1rem); letter-spacing: -.045em; }
+.page-heading > p:last-child { margin: 10px 0 0; color: #52657c; }
+.resume-grid { display: grid; gap: 13px; }
+.resume-card { display: grid; grid-template-columns: auto 1fr; gap: 14px; padding: 18px; border: 1px solid #dfe7f0; border-radius: 17px; background: #fff; box-shadow: 0 8px 26px rgba(25, 49, 80, .045); }
+.resume-card__icon { display: grid; place-items: center; width: 46px; height: 46px; border-radius: 12px; color: var(--ion-color-primary); background: #e9f2fc; font-size: 24px; }
+.resume-card__content h2 { margin: 1px 0 5px; color: #182b45; font-size: 1.08rem; }
+.resume-card__content p { margin: 0 0 5px; color: #445970; }
+.resume-card__content small { color: #5e7085; }
+.resume-card__actions { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 4px; padding-top: 7px; border-top: 1px solid #edf1f5; }
+.empty-state { max-width: 520px; margin: 62px auto; padding: 40px 24px; border: 1px solid #dfe7f0; border-radius: 20px; background: #fff; text-align: center; }
+.empty-state > ion-icon { color: var(--ion-color-primary); font-size: 52px; }
+.empty-state h2 { margin: 13px 0 8px; color: #182b45; }
+.empty-state p, .state-message { color: #52657c; }
+.error-message { padding: 13px 16px; border-radius: 10px; color: #8b1e2d; background: #fff0f1; }
+.state-message { margin: 60px auto; text-align: center; }
+ion-button { --box-shadow: none; font-weight: 700; text-transform: none; }
+
+@media (min-width: 720px) {
+  .resume-card { grid-template-columns: auto 1fr auto; align-items: center; }
+  .resume-card__actions { grid-column: auto; justify-content: flex-end; max-width: 430px; padding-top: 0; border-top: 0; }
+}

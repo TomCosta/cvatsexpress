@@ -1,0 +1,98 @@
+@let data = resume();
+@let labels = copy(data.language);
+<article class="resume" [class.resume--modern]="templateId() === 'modern-ats'">
+  <header class="resume__header">
+    <h1>{{ data.personalInfo.fullName || 'Seu nome' }}</h1>
+    @if (data.targetRole) {
+      <p class="resume__role">{{ data.targetRole }}</p>
+    }
+    @if (contactItems(data).length) {
+      <p class="resume__contact">{{ contactItems(data).join(' • ') }}</p>
+    }
+  </header>
+
+  @if (data.professionalSummary) {
+    <section>
+      <h2>{{ labels.summary }}</h2>
+      <p>{{ data.professionalSummary }}</p>
+    </section>
+  }
+
+  @if (meaningfulExperiences(data); as experiences) {
+    @if (experiences.length) {
+    <section>
+      <h2>{{ labels.experience }}</h2>
+      @for (experience of experiences; track experience.id) {
+        <div class="resume__entry">
+          <div class="resume__entry-heading">
+            <div>
+              <h3>{{ experience.role || labels.roleFallback }}</h3>
+              <p class="resume__subtitle">
+                {{ experience.company }}@if (experience.location) { · {{ experience.location }}}
+              </p>
+            </div>
+            <p class="resume__date">
+              {{ period(labels.current, experience.startDate, experience.endDate, experience.current) }}
+            </p>
+          </div>
+          @if (experience.description) {
+            <p class="resume__description">{{ experience.description }}</p>
+          }
+        </div>
+      }
+    </section>
+    }
+  }
+
+  @if (meaningfulEducation(data); as educationItems) {
+    @if (educationItems.length) {
+    <section>
+      <h2>{{ labels.education }}</h2>
+      @for (education of educationItems; track education.id) {
+        <div class="resume__entry">
+          <div class="resume__entry-heading">
+            <div>
+              <h3>{{ education.course || labels.courseFallback }}</h3>
+              <p class="resume__subtitle">{{ education.institution }}</p>
+            </div>
+            <p class="resume__date">
+              {{ period(labels.current, education.startDate, education.endDate) }}
+            </p>
+          </div>
+          @if (education.description) {
+            <p class="resume__description">{{ education.description }}</p>
+          }
+        </div>
+      }
+    </section>
+    }
+  }
+
+  @if (data.skills.length) {
+    <section>
+      <h2>{{ labels.skills }}</h2>
+      <p>@for (skill of data.skills; track skill.id; let last = $last) { {{ skill.name }}@if (!last) { · } }</p>
+    </section>
+  }
+
+  @if (data.languages.length) {
+    <section>
+      <h2>{{ labels.languages }}</h2>
+      <p>@for (item of data.languages; track item.id; let last = $last) { {{ item.language }}@if (item.level) { — {{ item.level }}}@if (!last) { · } }</p>
+    </section>
+  }
+
+  @if (data.courses.length) {
+    <section>
+      <h2>{{ labels.courses }}</h2>
+      @for (course of data.courses; track course.id) {
+        <div class="resume__course">
+          <strong>{{ course.name }}</strong>
+          @if (course.institution || course.year) {
+            <span> — {{ course.institution }}@if (course.year) {, {{ course.year }}}</span>
+          }
+        </div>
+      }
+    </section>
+  }
+</article>

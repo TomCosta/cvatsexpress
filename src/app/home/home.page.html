@@ -1,16 +1,53 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-menu-button></ion-menu-button>
-    </ion-buttons>
-    <ion-title> Home </ion-title>
-  </ion-toolbar>
-</ion-header>
-
+<app-header></app-header>
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">home</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <main class="home-shell">
+    <section class="hero" aria-labelledby="hero-title">
+      <ion-text color="primary">
+        <p class="eyebrow">Seu currículo, do seu jeito</p>
+      </ion-text>
+
+      <h1 id="hero-title">Um currículo profissional em poucos minutos.</h1>
+      <p class="hero__copy">
+        Organize sua trajetória em um formato claro, ATS-friendly e pronto para
+        compartilhar — sem upload automático dos seus dados.
+      </p>
+
+      <div class="actions">
+        <ion-button expand="block" size="large" routerLink="/resume/new">
+          <ion-icon name="document-text-outline" slot="start"></ion-icon>
+          Criar meu currículo
+          <ion-icon name="arrow-forward-outline" slot="end"></ion-icon>
+        </ion-button>
+        <ion-button expand="block" size="large" fill="outline" routerLink="/resumes">
+          <ion-icon name="folder-open-outline" slot="start"></ion-icon>
+          Meus currículos
+        </ion-button>
+      </div>
+
+    </section>
+
+    <section class="trust" aria-label="Benefícios do aplicativo">
+      <article>
+        <ion-icon name="checkmark-circle-outline" aria-hidden="true"></ion-icon>
+        <div>
+          <h2>Formato ATS-friendly</h2>
+          <p>Estrutura simples, profissional e fácil de ler.</p>
+        </div>
+      </article>
+      <article>
+        <ion-icon name="cloud-offline-outline" aria-hidden="true"></ion-icon>
+        <div>
+          <h2>Funciona offline</h2>
+          <p>Crie e edite sem depender de conexão.</p>
+        </div>
+      </article>
+      <article>
+        <ion-icon name="shield-checkmark-outline" aria-hidden="true"></ion-icon>
+        <div>
+          <h2>Privacidade primeiro</h2>
+          <p>Nenhum dado é enviado automaticamente; você decide quando compartilhar.</p>
+        </div>
+      </article>
+    </section>
+  </main>
 </ion-content>

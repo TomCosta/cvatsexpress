@@ -34,4 +34,23 @@
 
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
-@import '@ionic/angular/css/palettes/dark.system.css';
+/* Dark mode will be introduced only when its visual states are fully designed. */
+
+html {
+  background: #f8fafc;
+}
+
+body {
+  color: #10213a;
+}
+
+button,
+a,
+ion-button {
+  -webkit-tap-highlight-color: transparent;
+}
+
+:focus-visible {
+  outline: 3px solid rgba(var(--ion-color-primary-rgb), 0.35);
+  outline-offset: 3px;
+}
