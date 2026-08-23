@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, input } from '@angular/core';
 import {
   AlertController,
   IonButton,
@@ -27,6 +27,7 @@ import {
   imports: [IonButton, IonButtons, IonHeader, IonIcon, IonTitle, IonToolbar],
 })
 export class AppHeaderComponent {
+  readonly actionsDisabled = input(false);
   protected readonly appName = inject(APP_CONFIG).appName;
   protected readonly i18n = inject(AppLanguageService);
   private readonly alertController = inject(AlertController);

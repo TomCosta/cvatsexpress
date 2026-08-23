@@ -92,13 +92,29 @@
               <ion-input formControlName="country" [label]="i18n.t('editor.country')" labelPlacement="stacked" autocomplete="country-name"></ion-input>
             </ion-item>
             <ion-item>
-              <ion-input formControlName="linkedin" type="url" label="LinkedIn" labelPlacement="stacked" placeholder="https://linkedin.com/in/..." inputmode="url"></ion-input>
+              <ion-input
+                formControlName="linkedin"
+                type="url"
+                label="LinkedIn"
+                labelPlacement="stacked"
+                placeholder="https://www.linkedin.com/in/"
+                inputmode="url"
+                (ionBlur)="normalizeLinkedIn()"
+              ></ion-input>
               @if (form.controls.personalInfo.controls.linkedin.touched && form.controls.personalInfo.controls.linkedin.invalid) {
                 <ion-note color="danger">{{ i18n.t('editor.linkedinError') }}</ion-note>
               }
             </ion-item>
             <ion-item class="field-grid__wide">
-              <ion-input formControlName="portfolio" type="url" [label]="i18n.t('editor.portfolio')" labelPlacement="stacked" [placeholder]="i18n.t('editor.portfolioPlaceholder')" inputmode="url"></ion-input>
+              <ion-input
+                formControlName="portfolio"
+                type="url"
+                [label]="i18n.t('editor.portfolio')"
+                labelPlacement="stacked"
+                [placeholder]="i18n.t('editor.portfolioPlaceholder')"
+                inputmode="url"
+                (ionBlur)="normalizePortfolio()"
+              ></ion-input>
               @if (form.controls.personalInfo.controls.portfolio.touched && form.controls.personalInfo.controls.portfolio.invalid) {
                 <ion-note color="danger">{{ i18n.t('editor.portfolioError') }}</ion-note>
               }

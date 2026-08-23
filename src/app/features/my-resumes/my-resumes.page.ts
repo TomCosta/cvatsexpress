@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, DestroyRef, inject, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import {
   AlertController,
@@ -25,6 +25,8 @@ import type { Resume } from '../../core/models/resume.model';
 import { ResumeRepository } from '../../core/repositories/resume.repository';
 import { RESUME_TEMPLATES } from '../../core/models/resume-template.model';
 import { AppLanguageService } from '../../core/i18n/app-language.service';
+import type { AppTranslationKey } from '../../core/i18n/app-translations';
+import { CreateResumeService } from '../../core/services/create-resume.service';
 
 @Component({
   selector: 'app-my-resumes',
@@ -44,6 +46,8 @@ import { AppLanguageService } from '../../core/i18n/app-language.service';
   ],
 })
 export class MyResumesPage {
+  private readonly createResumeService = inject(CreateResumeService);
+  private readonly destroyRef = inject(DestroyRef);
   private readonly repository = inject(ResumeRepository);
   private readonly alertController = inject(AlertController);
   private readonly router = inject(Router);
@@ -51,7 +55,11 @@ export class MyResumesPage {
 
   protected readonly resumes = signal<readonly Resume[]>([]);
   protected readonly loading = signal(true);
-  protected readonly error = signal('');
+  private readonly errorKey = signal<AppTranslationKey | null>(null);
+  protected readonly creating = signal(false);
+  private pendingResumeId: string | null = null;
+  private viewActive = true;
+  private viewEpoch = 0;
   private dateFormatterLanguage = '';
   private dateFormatter?: Intl.DateTimeFormat;
 
@@ -64,10 +72,21 @@ export class MyResumesPage {
       eyeOutline,
       trashOutline,
     });
+    this.destroyRef.onDestroy(() => this.deactivateView());
   }
 
   ionViewWillEnter(): void {
+    this.viewActive = true;
     void this.load();
+  }
+
+  ionViewWillLeave(): void {
+    this.deactivateView();
+  }
+
+  protected errorMessage(): string {
+    const key = this.errorKey();
+    return key ? this.i18n.t(key) : '';
   }
 
   protected templateName(templateId: string): string {
@@ -86,7 +105,53 @@ export class MyResumesPage {
       await this.load();
       await this.router.navigate(['/resume', duplicated.id, 'edit']);
     } catch {
-      this.error.set(this.i18n.t('library.errorDuplicate'));
+      this.errorKey.set('library.errorDuplicate');
+    }
+  }
+
+  protected async createResume(): Promise<void> {
+    if (this.creating()) {
+      return;
+    }
+
+    const operationEpoch = this.viewEpoch;
+    this.creating.set(true);
+    this.errorKey.set(null);
+    if (!this.pendingResumeId) {
+      try {
+        this.pendingResumeId = (await this.createResumeService.create()).id;
+      } catch {
+        if (this.isCurrentView(operationEpoch)) {
+          this.errorKey.set('library.errorCreate');
+        }
+        this.creating.set(false);
+        return;
+      }
+    }
+
+    if (!this.isCurrentView(operationEpoch)) {
+      this.pendingResumeId = null;
+      this.creating.set(false);
+      return;
+    }
+
+    try {
+      const navigated = await this.router.navigate([
+        '/resume',
+        this.pendingResumeId,
+        'edit',
+      ]);
+      if (!navigated) {
+        throw new Error('Resume editor navigation was cancelled.');
+      }
+      this.pendingResumeId = null;
+    } catch {
+      this.pendingResumeId = null;
+      if (await this.load()) {
+        this.errorKey.set('library.errorOpenCreated');
+      }
+    } finally {
+      this.creating.set(false);
     }
   }
 
@@ -138,13 +203,15 @@ export class MyResumesPage {
     await alert.present();
   }
 
-  private async load(): Promise<void> {
+  private async load(): Promise<boolean> {
     this.loading.set(true);
-    this.error.set('');
+    this.errorKey.set(null);
     try {
       this.resumes.set(await this.repository.list());
+      return true;
     } catch {
-      this.error.set(this.i18n.t('library.errorRead'));
+      this.errorKey.set('library.errorRead');
+      return false;
     } finally {
       this.loading.set(false);
     }
@@ -159,7 +226,7 @@ export class MyResumesPage {
       });
       await this.load();
     } catch {
-      this.error.set(this.i18n.t('library.errorRename'));
+      this.errorKey.set('library.errorRename');
     }
   }
 
@@ -168,7 +235,7 @@ export class MyResumesPage {
       await this.repository.delete(id);
       await this.load();
     } catch {
-      this.error.set(this.i18n.t('library.errorDelete'));
+      this.errorKey.set('library.errorDelete');
     }
   }
 
@@ -188,5 +255,15 @@ export class MyResumesPage {
     }
 
     return this.dateFormatter.format(date);
+  }
+
+  private isCurrentView(operationEpoch: number): boolean {
+    return this.viewActive && operationEpoch === this.viewEpoch;
+  }
+
+  private deactivateView(): void {
+    this.viewActive = false;
+    this.viewEpoch += 1;
+    this.pendingResumeId = null;
   }
 }

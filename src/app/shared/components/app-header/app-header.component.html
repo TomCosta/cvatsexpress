@@ -12,6 +12,7 @@
       <ion-button
         class="language-button"
         (click)="openLanguageSelector()"
+        [disabled]="actionsDisabled()"
         [attr.aria-label]="i18n.t('language.openSelector')"
       >
         <ion-icon name="language-outline" slot="start" aria-hidden="true"></ion-icon>

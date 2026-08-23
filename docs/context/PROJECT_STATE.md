@@ -1,6 +1,6 @@
 # Current Project State
 
-Last updated: 2026-08-20
+Last updated: 2026-08-23
 
 ## Current Version
 
@@ -9,9 +9,11 @@ Last updated: 2026-08-20
 ## Working Features
 
 - Home, biblioteca, editor e preview em rotas lazy com fallback.
+- Criação confiável pela Home e biblioteca: o currículo é gerado e persistido antes da navegação, com bloqueio de cliques repetidos e erros distintos de criação, abertura e leitura.
 - Interface completa em `pt-BR`, `en-US`, `es-ES` e `es-419`, incluindo navegação, formulários, estados, score ATS e mensagens de PDF/compartilhamento.
 - No primeiro acesso, o idioma é escolhido nesta ordem: preferência persistida válida, primeiro locale compatível do sistema e `APP_CONFIG.defaultLanguage`. A Home oferece seletor persistente no header e a troca é aplicada sem reload.
 - Editor Reactive Forms para dados pessoais, objetivo, resumo, experiências, formação, competências, idiomas e cursos.
+- LinkedIn e portfólio aceitam preenchimento simplificado: o editor completa automaticamente o prefixo canônico ao sair do campo e antes de salvar, sem preencher campos opcionais vazios.
 - Reordenação, validações simples e descarte de seções repetíveis vazias.
 - Autosave com debounce e flush na saída, Preferences, CRUD, duplicação e envelope de schema 1 atrás de `ResumeRepository`.
 - Classic ATS e Modern ATS, com cabeçalhos do documento em `pt-BR`, `en-US`, `es-ES` e `es-419`. Idioma da interface e `Resume.language` são independentes; novos currículos herdam o idioma atual da interface, sem alterar os existentes.
@@ -25,11 +27,11 @@ Monetização, anúncios, templates premium, autenticação, cloud sync, analyti
 
 ## Current Architecture
 
-Standalone Angular UI depende de modelos e contratos centrais. `LocalResumeRepository` e `AppLanguageService` usam o boundary `KeyValueStorage`, implementado por Preferences. O contrato `PdfGeneratorService` é implementado no adapter local/Capacitor carregado com o preview. Score e definição PDF não dependem da UI. A localização segue DEC-006 e ADR-0005.
+Standalone Angular UI depende de modelos e contratos centrais. `CreateResumeService` cria e persiste antes de Home ou biblioteca navegarem para o editor; o editor apenas carrega um ID existente. `LocalResumeRepository` e `AppLanguageService` usam o boundary `KeyValueStorage`, implementado por Preferences. O contrato `PdfGeneratorService` é implementado no adapter local/Capacitor carregado com o preview. Score e definição PDF não dependem da UI. A localização segue DEC-006 e ADR-0005.
 
 ## Important Services
 
-`LocalResumeRepository`, `PreferencesStorage`, `AppLanguageService`, `ATSScoreService`, `PdfGeneratorService` e `LocalPdfGeneratorService`.
+`CreateResumeService`, `LocalResumeRepository`, `PreferencesStorage`, `AppLanguageService`, `ATSScoreService`, `PdfGeneratorService` e `LocalPdfGeneratorService`.
 
 ## Important Components
 
@@ -37,7 +39,7 @@ Standalone Angular UI depende de modelos e contratos centrais. `LocalResumeRepos
 
 ## Current Storage Strategy
 
-Preferences armazena o banco de currículos em `cv-ats-express.database`, com JSON versionado (`schemaVersion: 1`), e a preferência independente da interface em `cv-ats-express.app-language.v1`. Mutações de currículos e mudanças rápidas de idioma são serializadas. Android Auto Backup está desligado; no browser o plugin usa localStorage.
+Preferences armazena o banco de currículos em `cv-ats-express.database`, com JSON versionado (`schemaVersion: 1`), e a preferência independente da interface em `cv-ats-express.app-language.v1`. A correção do fluxo de criação não alterou esse schema. Mutações de currículos e mudanças rápidas de idioma são serializadas. IDs e clonagem de dados JSON-safe possuem fallback para WebViews sem `randomUUID` ou `structuredClone` funcional. Android Auto Backup está desligado; no browser o plugin usa localStorage.
 
 ## Current PDF Strategy
 
@@ -60,7 +62,7 @@ Desligada por configuração. Não há backend, chamada remota, SDK ou segredo.
 
 ## Known Bugs
 
-Nenhum bug funcional bloqueador verificado. Veja `KNOWN_ISSUES.md` para limitações.
+Nenhum bug funcional bloqueador verificado. O ciclo que impedia criar o primeiro currículo foi corrigido em 2026-08-22. Veja `KNOWN_ISSUES.md` para limitações.
 
 ## Next Recommended Tasks
 

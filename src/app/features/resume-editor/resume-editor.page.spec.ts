@@ -10,12 +10,12 @@ import { ResumeEditorPage } from './resume-editor.page';
 
 describe('ResumeEditorPage localization', () => {
   let routeId: string | null;
-  let savedResume: Resume | null;
+  let saveCount: number;
   let existingResume: Resume;
 
   beforeEach(async () => {
     routeId = 'resume-existing';
-    savedResume = null;
+    saveCount = 0;
     existingResume = createEmptyResume(routeId, 'pt-BR');
 
     await TestBed.configureTestingModule({
@@ -60,7 +60,7 @@ describe('ResumeEditorPage localization', () => {
             list: async () => [],
             findById: async () => existingResume,
             save: async (resume: Resume) => {
-              savedResume = resume;
+              saveCount += 1;
               return resume;
             },
             duplicate: async () => existingResume,
@@ -84,12 +84,13 @@ describe('ResumeEditorPage localization', () => {
     expect(languageSelect?.value).toBe('pt-BR');
   });
 
-  it('creates a new resume with the current UI language and title', async () => {
+  it('shows an explicit error instead of creating when the id is missing', async () => {
     routeId = null;
-    await createFixture();
+    const fixture = await createFixture();
+    const page: HTMLElement = fixture.nativeElement;
 
-    expect(savedResume?.language).toBe('es-ES');
-    expect(savedResume?.title).toBe('Mi currículum');
+    expect(page.textContent).toContain('No se ha identificado el currículum.');
+    expect(saveCount).toBe(0);
   });
 
   async function createFixture(): Promise<ComponentFixture<ResumeEditorPage>> {

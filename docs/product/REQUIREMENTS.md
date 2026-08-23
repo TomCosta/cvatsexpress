@@ -10,7 +10,7 @@
 
 ## Requisitos do MVP
 
-1. Criar, editar, renomear, duplicar e excluir currículos locais.
+1. Criar e persistir um currículo antes de abrir seu editor, além de editar, renomear, duplicar e excluir currículos locais.
 2. Editar dados pessoais, cargo, resumo, experiências, formação, competências, idiomas e cursos.
 3. Validar nome obrigatório, email e URLs preenchidas sem bloquear casos legítimos.
 4. Salvar automaticamente com debounce e feedback discreto.
@@ -25,6 +25,8 @@
 ## Critérios de aceite do MVP offline
 
 - Fluxo completo entre Home, editor, biblioteca local e preview.
+- Ações de criação na Home e biblioteca persistem antes da navegação, impedem duplicatas por clique repetido e mantêm erro recuperável na origem quando criar ou abrir falha.
+- O editor abre somente documentos identificados por ID e não cria um currículo implicitamente quando o ID está ausente ou inválido.
 - CRUD e duplicação persistidos via `ResumeRepository`, com schema versionado.
 - Autosave com debounce, flush na saída e feedback de estado.
 - Templates Classic ATS e Modern ATS em uma coluna.

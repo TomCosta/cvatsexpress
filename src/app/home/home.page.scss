@@ -48,6 +48,13 @@ h1 {
   gap: 12px;
 }
 
+.create-error {
+  margin: 2px 0 0;
+  color: var(--ion-color-danger-shade);
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
 ion-button {
   --border-radius: 14px;
   --box-shadow: none;
@@ -101,6 +108,10 @@ ion-button {
   .actions {
     grid-template-columns: 1fr 1fr;
     max-width: 570px;
+  }
+
+  .create-error {
+    grid-column: 1 / -1;
   }
 
   .trust {

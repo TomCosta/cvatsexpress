@@ -37,6 +37,11 @@ import {
 import { concatMap, debounceTime, from } from 'rxjs';
 
 import { AppLanguageService } from '../../core/i18n/app-language.service';
+import { createLocalId } from '../../core/models/local-id';
+import {
+  normalizeLinkedInProfile,
+  normalizeWebsite,
+} from '../../core/models/profile-url';
 import type {
   Course,
   Education,
@@ -47,7 +52,6 @@ import type {
   Skill,
 } from '../../core/models/resume.model';
 import {
-  createEmptyResume,
   hasEducationDraftContent,
   hasExperienceDraftContent,
 } from '../../core/models/resume.model';
@@ -153,7 +157,7 @@ export class ResumeEditorPage {
   protected addExperience(value?: Experience): void {
     this.experiences.push(
       this.fb.nonNullable.group({
-        id: [value?.id ?? crypto.randomUUID()],
+        id: [value?.id ?? createLocalId()],
         company: [value?.company ?? ''],
         role: [value?.role ?? ''],
         location: [value?.location ?? ''],
@@ -168,7 +172,7 @@ export class ResumeEditorPage {
   protected addEducation(value?: Education): void {
     this.education.push(
       this.fb.nonNullable.group({
-        id: [value?.id ?? crypto.randomUUID()],
+        id: [value?.id ?? createLocalId()],
         institution: [value?.institution ?? ''],
         course: [value?.course ?? ''],
         startDate: [value?.startDate ?? ''],
@@ -181,7 +185,7 @@ export class ResumeEditorPage {
   protected addSkill(value?: Skill): void {
     this.skills.push(
       this.fb.nonNullable.group({
-        id: [value?.id ?? crypto.randomUUID()],
+        id: [value?.id ?? createLocalId()],
         name: [value?.name ?? ''],
       }),
     );
@@ -190,7 +194,7 @@ export class ResumeEditorPage {
   protected addLanguage(value?: LanguageSkill): void {
     this.languages.push(
       this.fb.nonNullable.group({
-        id: [value?.id ?? crypto.randomUUID()],
+        id: [value?.id ?? createLocalId()],
         language: [value?.language ?? ''],
         level: [value?.level ?? ''],
       }),
@@ -200,7 +204,7 @@ export class ResumeEditorPage {
   protected addCourse(value?: Course): void {
     this.courses.push(
       this.fb.nonNullable.group({
-        id: [value?.id ?? crypto.randomUUID()],
+        id: [value?.id ?? createLocalId()],
         name: [value?.name ?? ''],
         institution: [value?.institution ?? ''],
         year: [value?.year ?? ''],
@@ -221,6 +225,22 @@ export class ResumeEditorPage {
     const control = array.at(index);
     array.removeAt(index);
     array.insert(target, control);
+  }
+
+  protected normalizeLinkedIn(): void {
+    const control = this.form.controls.personalInfo.controls.linkedin;
+    const normalized = normalizeLinkedInProfile(control.value);
+    if (normalized !== control.value) {
+      control.setValue(normalized);
+    }
+  }
+
+  protected normalizePortfolio(): void {
+    const control = this.form.controls.personalInfo.controls.portfolio;
+    const normalized = normalizeWebsite(control.value);
+    if (normalized !== control.value) {
+      control.setValue(normalized);
+    }
   }
 
   protected async openPreview(): Promise<void> {
@@ -259,16 +279,7 @@ export class ResumeEditorPage {
     try {
       const id = this.route.snapshot.paramMap.get('id');
       if (!id) {
-        const resume = createEmptyResume(
-          crypto.randomUUID(),
-          this.i18n.language(),
-          new Date(),
-          this.i18n.t('editor.defaultTitle'),
-        );
-        await this.repository.save(resume);
-        await this.router.navigate(['/resume', resume.id, 'edit'], {
-          replaceUrl: true,
-        });
+        this.loadError.set(this.i18n.t('editor.errorMissingId'));
         return;
       }
 
@@ -337,8 +348,12 @@ export class ResumeEditorPage {
           city: this.optional(value.personalInfo.city),
           state: this.optional(value.personalInfo.state),
           country: this.optional(value.personalInfo.country),
-          linkedin: this.optional(value.personalInfo.linkedin),
-          portfolio: this.optional(value.personalInfo.portfolio),
+          linkedin: this.optional(
+            normalizeLinkedInProfile(value.personalInfo.linkedin),
+          ),
+          portfolio: this.optional(
+            normalizeWebsite(value.personalInfo.portfolio),
+          ),
         },
         targetRole: this.optional(value.targetRole),
         professionalSummary: this.optional(value.professionalSummary),

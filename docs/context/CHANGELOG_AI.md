@@ -1,5 +1,46 @@
 # AI Change Log
 
+## 2026-08-23
+
+### Changed
+
+- O editor agora completa identificadores do LinkedIn com `https://www.linkedin.com/in/` e endereços de portfólio sem protocolo com `https://`.
+- A normalização ocorre ao sair do campo e também antes do autosave, preserva campos vazios e evita duplicar protocolos em URLs completas.
+- Variantes comuns de perfil do LinkedIn são persistidas no formato canônico com HTTPS e `www`.
+
+### Architecture impact
+
+- Nenhum contrato ou schema de persistência foi alterado. A regra determinística e offline foi isolada em `core/models/profile-url.ts` e consumida pelo editor.
+
+### Validation
+
+- Lint, 64/64 testes Karma, build de produção e `cap sync android` passaram.
+
+## 2026-08-22
+
+### Changed
+
+- Adicionado `CreateResumeService` para gerar e persistir um currículo antes de navegar ao editor.
+- Home e biblioteca deixaram de usar `/resume/new`; a rota foi removida e o editor passou a carregar somente currículos identificados por `/resume/:id/edit`.
+- Adicionados estado de criação, bloqueio de cliques repetidos, mensagens separadas para falhas de criar, abrir e ler e proteção por epoch contra navegação tardia depois de sair da tela.
+- A Home preserva o ID já criado quando apenas a navegação falha, permitindo tentar abrir novamente sem duplicar o currículo; a biblioteca recarrega e exibe o documento persistido.
+- Geração de IDs e clonagem do modelo JSON-safe ganharam fallbacks para WebViews sem `crypto.randomUUID` ou `structuredClone` utilizável.
+- Mantidos `schemaVersion: 1`, Preferences e os contratos offline existentes.
+
+### Why
+
+- Corrigir o ciclo que impedia criar o primeiro currículo quando uma API do runtime, persistência ou navegação falhava, preservando uma recuperação clara na tela de origem.
+
+### Architecture impact
+
+- A criação passou a ser um caso de uso em `core/services`; a UI continua dependente de `ResumeRepository` e não acessa storage nativo. A revisão de arquitetura concluiu que a mudança respeita decisões existentes e não requer novo ADR.
+
+### Validation
+
+- Lint, 60/60 testes Karma e build de produção passaram.
+- `cap sync android` encontrou Filesystem, Preferences e Share; `testDebugUnitTest` e `assembleDebug` passaram.
+- Revisões de arquitetura, produto e QA concluídas sem pendência bloqueadora.
+
 ## 2026-08-20
 
 ### Changed

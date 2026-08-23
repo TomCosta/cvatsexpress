@@ -2,7 +2,7 @@
 
 ## KI-001 — Node default is incompatible
 
-The machine's default Node is 18.14.0, while Angular 20 and Capacitor 8 require a newer runtime. Run `nvm use` to select the repository's Node 22.17.0 before npm/ng/cap commands.
+The machine's default Node is 18.14.0, while Angular 20 and Capacitor 8 require a newer runtime. Run `nvm use` to select the repository's Node 24.19.0 before npm/ng/cap commands.
 
 ## KI-002 — Generated Android branding
 
@@ -31,3 +31,7 @@ The `application` builder reproducibly aborted inside esbuild 0.28.x with `all g
 ## Resolved during foundation
 
 Android Gradle access initially failed inside the sandbox. After approved native access and the final Capacitor sync, `testDebugUnitTest` and `assembleDebug` completed successfully. This is not a current application issue.
+
+## Resolved in reliable resume creation
+
+O primeiro currículo podia cair no erro genérico de abertura e devolver o usuário à biblioteca vazia, repetindo o fluxo sem diagnóstico útil. Em 2026-08-22, a criação foi movida para um caso de uso que persiste antes da navegação; Home e biblioteca agora exibem falhas recuperáveis e não usam mais `/resume/new`. Esta não é uma limitação atual.

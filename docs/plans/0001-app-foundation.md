@@ -10,7 +10,7 @@ O repositório continha scaffold Ionic/Angular parcial com página vazia, menu d
 
 ## Current State
 
-Ionic 8, Angular 20 e Capacitor 8 estavam instalados. O runtime padrão era Node 18, incompatível; Node 22.17 já existia via NVM.
+Ionic 8, Angular 20 e Capacitor 8 estavam instalados. O runtime padrão era Node 18, incompatível; Node 24.19 já existia via NVM.
 
 ## Scope
 

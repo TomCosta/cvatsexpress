@@ -1,4 +1,4 @@
-<app-header></app-header>
+<app-header [actionsDisabled]="creating()"></app-header>
 <ion-content [fullscreen]="true">
   <main class="home-shell">
     <section class="hero" aria-labelledby="hero-title">
@@ -10,15 +10,19 @@
       <p class="hero__copy">{{ i18n.t('home.description') }}</p>
 
       <div class="actions">
-        <ion-button expand="block" size="large" routerLink="/resume/new">
+        <ion-button expand="block" size="large" (click)="createResume()" [disabled]="creating()" [attr.aria-busy]="creating()">
           <ion-icon name="document-text-outline" slot="start"></ion-icon>
-          {{ i18n.t('home.create') }}
+          {{ creationActionLabel() }}
           <ion-icon name="arrow-forward-outline" slot="end"></ion-icon>
         </ion-button>
-        <ion-button expand="block" size="large" fill="outline" routerLink="/resumes">
+        <ion-button expand="block" size="large" fill="outline" routerLink="/resumes" [disabled]="creating()">
           <ion-icon name="folder-open-outline" slot="start"></ion-icon>
           {{ i18n.t('home.myResumes') }}
         </ion-button>
+        @if (creationMessage()) {
+          <p class="create-error" role="alert">{{ creationMessage() }}</p>
+        }
+        <span class="visually-hidden" aria-live="polite">{{ creating() ? i18n.t('common.creating') : '' }}</span>
       </div>
 
     </section>

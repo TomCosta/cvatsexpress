@@ -3,7 +3,7 @@
     <ion-buttons slot="start"><ion-back-button defaultHref="/home" text="" [attr.aria-label]="i18n.t('common.back')"></ion-back-button></ion-buttons>
     <ion-title>{{ i18n.t('library.headerTitle') }}</ion-title>
     <ion-buttons slot="end">
-      <ion-button routerLink="/resume/new"><ion-icon name="add-outline" slot="start"></ion-icon>{{ i18n.t('common.new') }}</ion-button>
+      <ion-button (click)="createResume()" [disabled]="creating()" [attr.aria-busy]="creating()"><ion-icon name="add-outline" slot="start"></ion-icon>{{ i18n.t(creating() ? 'common.creating' : 'common.new') }}</ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
@@ -16,7 +16,8 @@
       <p>{{ i18n.t('library.description') }}</p>
     </header>
 
-    @if (error()) { <p class="error-message" role="alert">{{ error() }}</p> }
+    @if (errorMessage()) { <p class="error-message" role="alert">{{ errorMessage() }}</p> }
+    <span class="visually-hidden" aria-live="polite">{{ creating() ? i18n.t('common.creating') : '' }}</span>
 
     @if (loading()) {
       <p class="state-message" role="status">{{ i18n.t('library.loading') }}</p>
@@ -25,7 +26,7 @@
         <ion-icon name="document-text-outline" aria-hidden="true"></ion-icon>
         <h2>{{ i18n.t('library.emptyTitle') }}</h2>
         <p>{{ i18n.t('library.emptyDescription') }}</p>
-        <ion-button routerLink="/resume/new" size="large"><ion-icon name="add-outline" slot="start"></ion-icon>{{ i18n.t('library.create') }}</ion-button>
+        <ion-button (click)="createResume()" [disabled]="creating()" [attr.aria-busy]="creating()" size="large"><ion-icon name="add-outline" slot="start"></ion-icon>{{ i18n.t(creating() ? 'common.creating' : 'library.create') }}</ion-button>
       </section>
     } @else {
       <section class="resume-grid" [attr.aria-label]="i18n.t('library.savedLabel')">

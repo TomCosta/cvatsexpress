@@ -19,6 +19,10 @@ Textos da interface, score e ações de compartilhamento ficam em `src/app/core/
 
 - Proposta de valor: “Crie um currículo profissional e ATS-friendly em poucos minutos.”
 - Ação primária: “Criar meu currículo”
+- Estado da criação: “Criando…”
+- Nova tentativa de abertura: “Abrir currículo”
+- Falha de criação: “Não foi possível criar o currículo. Tente novamente.”
+- Falha de abertura após persistir: “O currículo foi criado, mas não foi possível abrir o editor. Tente novamente.”
 - Ação secundária: “Meus currículos”
 - Estado de salvamento: “Salvo neste dispositivo”
 - Nome do score: “ATS-Friendly Score”
@@ -29,3 +33,5 @@ Textos da interface, score e ações de compartilhamento ficam em `src/app/core/
 Nunca dizer que o currículo tem aprovação, passagem ou ranking garantido em ATS. Usar orientação direta e encorajadora. Distinguir claramente ATS-Friendly Score de um futuro Job Match Score. Alertar antes de qualquer processamento remoto opcional futuro.
 
 O seletor apresenta o nome nativo de cada idioma. A ajuda do editor deve deixar explícito que “Idioma do currículo” controla o documento/PDF e não os menus do aplicativo.
+
+Falha ao criar, falha ao abrir um currículo já persistido e falha ao ler a biblioteca são situações distintas e não devem compartilhar uma mensagem genérica. Estados de erro que permanecem na Home ou biblioteca devem guardar a chave de tradução, não a frase resolvida, para reagir à troca de idioma.

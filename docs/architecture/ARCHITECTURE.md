@@ -8,7 +8,7 @@
 - Preferences 8.0.1, Filesystem 8.1.2 e Share 8.0.1
 - pdfmake 0.3.11
 - RxJS 7.8.2, SCSS, Karma/Jasmine e Angular ESLint
-- Node 22.12+; `.nvmrc` fixa 22.17.0
+- Node 24.19+; `.nvmrc` fixa 24.19.0
 
 Versões resolvidas completas estão em `package-lock.json`.
 
@@ -30,10 +30,10 @@ Features importam `core`, `shared` e componentes de template. `core` não import
 
 - `core/config`: `AppConfig`, flags e token de injeção.
 - `core/i18n`: catálogo tipado, seleção/detecção de idioma e títulos de rota localizados.
-- `core/models`: Resume, template/cópia do documento e envelope versionado.
+- `core/models`: Resume, template/cópia do documento, envelope versionado e helpers compatíveis para IDs/clonagem JSON-safe.
 - `core/repositories`: contrato `ResumeRepository` e implementação local.
 - `core/storage`: boundary key/value e adapter Preferences.
-- `core/services`: ATS Score, contrato PDF e definição textual pura.
+- `core/services`: caso de uso de criação, ATS Score, contrato PDF e definição textual pura.
 - `infrastructure/pdf`: adapter pdfmake/Filesystem/Share.
 - `features`: editor, biblioteca e preview.
 - `templates`: componente visual Classic/Modern.
@@ -46,7 +46,11 @@ Features importam `core`, `shared` e componentes de template. `core` não import
 
 ## Domínio e storage
 
-`Resume` não depende de framework. Features usam `ResumeRepository`; `LocalResumeRepository` usa `KeyValueStorage`, fornecido por `PreferencesStorage`. O envelope tem `schemaVersion`; mutações são serializadas e versões não suportadas são rejeitadas. A UI não acessa Preferences.
+`Resume` não depende de framework. Features usam `ResumeRepository`; `LocalResumeRepository` usa `KeyValueStorage`, fornecido por `PreferencesStorage`. O envelope permanece em `schemaVersion: 1`; mutações são serializadas e versões não suportadas são rejeitadas. A UI não acessa Preferences.
+
+`CreateResumeService` é o caso de uso central de criação: gera o ID, aplica idioma e título atuais e aguarda `ResumeRepository.save()` antes de devolver o modelo. Home e biblioteca só navegam para `/resume/:id/edit` depois desse retorno; `/resume/new` não existe mais e o editor não cria entidades implicitamente. As telas bloqueiam novas tentativas enquanto a operação está pendente e usam uma epoch de atividade para impedir navegação tardia se o usuário já saiu. Falhas de criar, abrir e ler são estados separados, armazenados como chaves para acompanhar mudanças do idioma da interface.
+
+`createLocalId` prefere `crypto.randomUUID`, recua para `getRandomValues` e, por fim, produz um identificador local sem Web Crypto. `cloneJsonValue` prefere `structuredClone` e recua para JSON; esse fallback é adequado porque o modelo persistido já é deliberadamente JSON-safe. IDs locais não são tokens de segurança.
 
 A preferência global de interface usa o mesmo boundary, mas uma chave independente: `cv-ats-express.app-language.v1`. No bootstrap, `AppLanguageService` resolve uma preferência persistida válida; sem ela, percorre `navigator.languages` até o primeiro locale compatível; sem compatibilidade, usa `APP_CONFIG.defaultLanguage`. A inicialização termina antes da primeira renderização. Falha de storage mantém o idioma em memória e não impede o app de iniciar.
 
@@ -59,8 +63,14 @@ Idioma da interface e `Resume.language` têm ciclos de vida independentes. A pre
 ## Fluxos do MVP
 
 ```text
-Editor → Resume → ResumeRepository → Preferences
-                  ↓
+Home / Biblioteca → CreateResumeService → ResumeRepository → Preferences
+                                             ↓
+                                      /resume/:id/edit
+                                             ↓
+                                           Editor
+
+Editor → ResumeRepository → Preferences
+   ↓
 Preview → ATSScoreService
         → PdfGeneratorService → LocalPdfGeneratorService
                               → pdfmake → cache privado → Share

@@ -4,6 +4,8 @@ import {
   CURRENT_SCHEMA_VERSION,
   type LocalDatabase,
 } from '../models/local-database.model';
+import { cloneJsonValue } from '../models/json-clone';
+import { createLocalId } from '../models/local-id';
 import { isResumeLanguage, type Resume } from '../models/resume.model';
 import { KeyValueStorage } from '../storage/key-value.storage';
 import { ResumeRepository } from './resume.repository';
@@ -58,7 +60,7 @@ export class LocalResumeRepository extends ResumeRepository {
       const timestamp = new Date().toISOString();
       const duplicate: Resume = {
         ...this.clone(source),
-        id: crypto.randomUUID(),
+        id: createLocalId(),
         title: `${source.title} — ${copyLabel}`,
         createdAt: timestamp,
         updatedAt: timestamp,
@@ -137,7 +139,7 @@ export class LocalResumeRepository extends ResumeRepository {
   }
 
   private clone<T>(value: T): T {
-    return structuredClone(value);
+    return cloneJsonValue(value);
   }
 
   private isRecord(value: unknown): value is Record<string, unknown> {

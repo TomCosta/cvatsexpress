@@ -20,14 +20,6 @@ export const routes: Routes = [
       ),
   },
   {
-    path: 'resume/new',
-    data: { titleKey: 'route.newResume' },
-    loadComponent: () =>
-      import('./features/resume-editor/resume-editor.page').then(
-        (m) => m.ResumeEditorPage,
-      ),
-  },
-  {
     path: 'resume/:id/edit',
     data: { titleKey: 'route.editResume' },
     loadComponent: () =>
