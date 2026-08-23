@@ -15,4 +15,16 @@ describe('createEmptyResume', () => {
     expect(first.experiences).toEqual([]);
     expect(first.experiences).not.toBe(second.experiences);
   });
+
+  it('accepts a localized default title without changing the document language', () => {
+    const resume = createEmptyResume(
+      'resume-en',
+      'en-US',
+      new Date('2026-08-19T12:00:00.000Z'),
+      'My resume',
+    );
+
+    expect(resume.title).toBe('My resume');
+    expect(resume.language).toBe('en-US');
+  });
 });

@@ -15,19 +15,19 @@ CV ATS Express cria, salva, avalia e exporta currículos ATS-friendly sem cadast
 
 ## Current Development State
 
-Milestones 0–8 estão implementados. Há editor, autosave/CRUD local, dois templates, preview, score heurístico, PDF/download/share, Android e documentação durável.
+Milestones 0–8 estão implementados. A versão 0.3.0 acrescenta localização completa da interface em runtime para `pt-BR`, `en-US`, `es-ES` e `es-419`, mantendo editor, autosave/CRUD local, dois templates, preview, score heurístico, PDF/download/share e Android.
 
 ## Last Significant Change
 
-Em 2026-08-17 o escopo avançou da fundação ao MVP offline. Preferences, Filesystem e Share foram integrados atrás de boundaries; pdfmake gera texto selecionável; saves concorrentes são serializados; seções vazias não afetam score/documento.
+Em 2026-08-20 a UI inteira passou a usar catálogo tipado em runtime. `AppLanguageService` inicializa antes da primeira renderização, prioriza preferência válida, depois o primeiro locale compatível do sistema e por fim `APP_CONFIG.defaultLanguage`, e persiste em `cv-ats-express.app-language.v1`. A Home expõe o seletor; a escolha da UI não altera `Resume.language` de documentos existentes, enquanto novos currículos a herdam.
 
 ## Current Problems
 
-Nenhum bloqueio conhecido. Faltam teste manual em hardware Android, branding nativo/release signing e triagem dedicada dos 24 achados do npm audit. O builder Angular `application` foi substituído por `browser` após deadlock do esbuild 0.28.x neste projeto.
+Nenhum bloqueio conhecido. Faltam validar em hardware Android a detecção do locale, o modal de idioma e o share sheet; também faltam branding nativo/release signing e triagem dedicada dos 24 achados do npm audit. `PreferencesStorage` ainda importa Capacitor de dentro de `core/storage`, dívida preexistente de localização física do adapter. O builder Angular `application` foi substituído por `browser` após deadlock do esbuild 0.28.x neste projeto.
 
 ## Recommended Next Task
 
-Validar teclado, persistência após reinício e compartilhamento em pelo menos um aparelho Android. Tratar branding/release em plano próprio ou iniciar arquitetura opcional de IA somente com consentimento e backend.
+Validar primeiro acesso com locales distintos, troca/persistência no modal, teclado, reinício e compartilhamento em pelo menos um aparelho Android. Tratar branding/release em plano próprio depois desse passe.
 
 ## Commands
 

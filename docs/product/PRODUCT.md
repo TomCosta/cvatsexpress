@@ -6,7 +6,7 @@ CV ATS Express é um aplicativo Android offline-first para montar currículos pr
 
 ## Problema e usuário
 
-Pessoas buscando emprego precisam organizar informações profissionais e gerar um documento legível sem dominar design, depender de cadastro ou enviar dados pessoais a um servidor. O foco inicial é o usuário brasileiro usando celular, incluindo primeiro emprego e profissionais experientes.
+Pessoas buscando emprego precisam organizar informações profissionais e gerar um documento legível sem dominar design, depender de cadastro ou enviar dados pessoais a um servidor. O foco inicial continua sendo o usuário brasileiro usando celular, incluindo primeiro emprego e profissionais experientes; a interface também atende usuários de inglês e espanhol.
 
 ## Proposta de valor
 
@@ -14,7 +14,9 @@ Pessoas buscando emprego precisam organizar informações profissionais e gerar 
 
 ## MVP
 
-O MVP offline inclui editor de dados pessoais, resumo, experiências, formação, competências, idiomas e cursos; armazenamento local e autosave; Classic ATS e Modern ATS; preview; ATS-Friendly Score heurístico; PDF; compartilhamento; e gestão de currículos locais.
+O MVP offline inclui editor de dados pessoais, resumo, experiências, formação, competências, idiomas e cursos; armazenamento local e autosave; Classic ATS e Modern ATS; preview; ATS-Friendly Score heurístico; PDF; compartilhamento; gestão de currículos locais; e interface em `pt-BR`, `en-US`, `es-ES` e `es-419`, escolhida pelo sistema no primeiro acesso e alterável na Home.
+
+O idioma dos menus é uma preferência do aplicativo. O idioma de cada currículo controla seu documento e PDF; novos currículos herdam a preferência atual, mas documentos existentes não são alterados automaticamente.
 
 ## Fora do MVP
 

@@ -4,6 +4,7 @@ import { RouterTestingHarness } from '@angular/router/testing';
 
 import { routes } from './app.routes';
 import { APP_CONFIG } from './core/config/app-config';
+import { KeyValueStorage } from './core/storage/key-value.storage';
 
 describe('app routes', () => {
   beforeEach(() => {
@@ -22,6 +23,14 @@ describe('app routes', () => {
               realBilling: false,
               premiumTemplates: false,
             },
+          },
+        },
+        {
+          provide: KeyValueStorage,
+          useValue: {
+            get: async () => null,
+            set: async () => undefined,
+            remove: async () => undefined,
           },
         },
       ],

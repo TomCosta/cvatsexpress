@@ -59,3 +59,15 @@ Decision: environments fornecem `AppConfig` via `APP_CONFIG` no bootstrap.
 Reasons: tipagem, teste e substituição centralizada.
 
 Consequences: componentes que precisam de configuração injetam o token; valores secretos são proibidos.
+
+## DEC-006 — Runtime localization with separate UI and document languages
+
+Status: Accepted
+
+Context: o documento já suporta quatro idiomas, enquanto menus e formulários permanecem em português.
+
+Decision: usar catálogo tipado em runtime e preferência local inicializada pelo locale do sistema. Idioma global da interface e idioma de cada currículo permanecem independentes.
+
+Reasons: troca imediata dentro do app, uma única distribuição Android, funcionamento offline e preservação da intenção de documentos já salvos.
+
+Consequences: novas strings visíveis precisam de tradução nos quatro idiomas; novos currículos herdam o idioma da interface, sem alterar os existentes. Veja ADR-0005.

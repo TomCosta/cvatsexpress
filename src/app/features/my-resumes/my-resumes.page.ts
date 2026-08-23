@@ -1,4 +1,3 @@
-import { DatePipe } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import {
@@ -25,6 +24,7 @@ import {
 import type { Resume } from '../../core/models/resume.model';
 import { ResumeRepository } from '../../core/repositories/resume.repository';
 import { RESUME_TEMPLATES } from '../../core/models/resume-template.model';
+import { AppLanguageService } from '../../core/i18n/app-language.service';
 
 @Component({
   selector: 'app-my-resumes',
@@ -32,7 +32,6 @@ import { RESUME_TEMPLATES } from '../../core/models/resume-template.model';
   templateUrl: './my-resumes.page.html',
   styleUrls: ['./my-resumes.page.scss'],
   imports: [
-    DatePipe,
     RouterLink,
     IonBackButton,
     IonButton,
@@ -48,10 +47,13 @@ export class MyResumesPage {
   private readonly repository = inject(ResumeRepository);
   private readonly alertController = inject(AlertController);
   private readonly router = inject(Router);
+  protected readonly i18n = inject(AppLanguageService);
 
   protected readonly resumes = signal<readonly Resume[]>([]);
   protected readonly loading = signal(true);
   protected readonly error = signal('');
+  private dateFormatterLanguage = '';
+  private dateFormatter?: Intl.DateTimeFormat;
 
   constructor() {
     addIcons({
@@ -77,30 +79,33 @@ export class MyResumesPage {
 
   protected async duplicate(resume: Resume): Promise<void> {
     try {
-      const duplicated = await this.repository.duplicate(resume.id);
+      const duplicated = await this.repository.duplicate(
+        resume.id,
+        this.i18n.t('common.copySuffix'),
+      );
       await this.load();
       await this.router.navigate(['/resume', duplicated.id, 'edit']);
     } catch {
-      this.error.set('Não foi possível duplicar o currículo.');
+      this.error.set(this.i18n.t('library.errorDuplicate'));
     }
   }
 
   protected async rename(resume: Resume): Promise<void> {
     const alert = await this.alertController.create({
-      header: 'Renomear currículo',
+      header: this.i18n.t('library.renameTitle'),
       inputs: [
         {
           name: 'title',
           type: 'text',
           value: resume.title,
-          placeholder: 'Nome do currículo',
+          placeholder: this.i18n.t('library.resumeName'),
           attributes: { maxlength: 80 },
         },
       ],
       buttons: [
-        { text: 'Cancelar', role: 'cancel' },
+        { text: this.i18n.t('common.cancel'), role: 'cancel' },
         {
-          text: 'Salvar',
+          text: this.i18n.t('common.save'),
           handler: (values: { title?: string }) => {
             const title = values.title?.trim();
             if (!title) {
@@ -117,12 +122,12 @@ export class MyResumesPage {
 
   protected async confirmDelete(resume: Resume): Promise<void> {
     const alert = await this.alertController.create({
-      header: 'Excluir currículo?',
-      message: `“${resume.title}” será removido deste dispositivo. Esta ação não pode ser desfeita.`,
+      header: this.i18n.t('library.deleteTitle'),
+      message: this.i18n.t('library.deleteMessage', { title: resume.title }),
       buttons: [
-        { text: 'Cancelar', role: 'cancel' },
+        { text: this.i18n.t('common.cancel'), role: 'cancel' },
         {
-          text: 'Excluir',
+          text: this.i18n.t('common.delete'),
           role: 'destructive',
           handler: () => {
             void this.deleteResume(resume.id);
@@ -139,7 +144,7 @@ export class MyResumesPage {
     try {
       this.resumes.set(await this.repository.list());
     } catch {
-      this.error.set('Não foi possível ler os currículos deste dispositivo.');
+      this.error.set(this.i18n.t('library.errorRead'));
     } finally {
       this.loading.set(false);
     }
@@ -154,7 +159,7 @@ export class MyResumesPage {
       });
       await this.load();
     } catch {
-      this.error.set('Não foi possível renomear o currículo.');
+      this.error.set(this.i18n.t('library.errorRename'));
     }
   }
 
@@ -163,7 +168,25 @@ export class MyResumesPage {
       await this.repository.delete(id);
       await this.load();
     } catch {
-      this.error.set('Não foi possível excluir o currículo.');
+      this.error.set(this.i18n.t('library.errorDelete'));
     }
+  }
+
+  protected formattedDate(value: string): string {
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) {
+      return value;
+    }
+
+    const language = this.i18n.language();
+    if (!this.dateFormatter || this.dateFormatterLanguage !== language) {
+      this.dateFormatterLanguage = language;
+      this.dateFormatter = new Intl.DateTimeFormat(language, {
+        dateStyle: 'short',
+        timeStyle: 'short',
+      });
+    }
+
+    return this.dateFormatter.format(date);
   }
 }

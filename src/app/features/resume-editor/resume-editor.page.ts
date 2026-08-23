@@ -36,7 +36,7 @@ import {
 } from 'ionicons/icons';
 import { concatMap, debounceTime, from } from 'rxjs';
 
-import { APP_CONFIG } from '../../core/config/app-config';
+import { AppLanguageService } from '../../core/i18n/app-language.service';
 import type {
   Course,
   Education,
@@ -87,7 +87,7 @@ export class ResumeEditorPage {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly destroyRef = inject(DestroyRef);
-  private readonly appConfig = inject(APP_CONFIG);
+  protected readonly i18n = inject(AppLanguageService);
 
   protected readonly loading = signal(true);
   protected readonly loadError = signal('');
@@ -95,8 +95,8 @@ export class ResumeEditorPage {
   protected resume: Resume | null = null;
 
   protected readonly form = this.fb.nonNullable.group({
-    title: ['Meu currículo', [Validators.required, Validators.maxLength(80)]],
-    language: ['pt-BR' as ResumeLanguage, Validators.required],
+    title: [this.i18n.t('editor.defaultTitle'), [Validators.required, Validators.maxLength(80)]],
+    language: [this.i18n.language() as ResumeLanguage, Validators.required],
     personalInfo: this.fb.nonNullable.group({
       fullName: ['', [Validators.required, Validators.maxLength(100)]],
       email: ['', Validators.email],
@@ -245,13 +245,13 @@ export class ResumeEditorPage {
   protected saveMessage(): string {
     switch (this.saveState()) {
       case 'saving':
-        return 'Salvando…';
+        return this.i18n.t('editor.saveSaving');
       case 'saved':
-        return 'Salvo neste dispositivo';
+        return this.i18n.t('editor.saveSaved');
       case 'error':
-        return 'Não foi possível salvar';
+        return this.i18n.t('editor.saveError');
       default:
-        return 'As alterações são salvas automaticamente';
+        return this.i18n.t('editor.saveIdle');
     }
   }
 
@@ -261,7 +261,9 @@ export class ResumeEditorPage {
       if (!id) {
         const resume = createEmptyResume(
           crypto.randomUUID(),
-          this.appConfig.defaultLanguage,
+          this.i18n.language(),
+          new Date(),
+          this.i18n.t('editor.defaultTitle'),
         );
         await this.repository.save(resume);
         await this.router.navigate(['/resume', resume.id, 'edit'], {
@@ -272,7 +274,7 @@ export class ResumeEditorPage {
 
       const resume = await this.repository.findById(id);
       if (!resume) {
-        this.loadError.set('Este currículo não foi encontrado.');
+        this.loadError.set(this.i18n.t('editor.errorNotFound'));
         return;
       }
 
@@ -286,7 +288,7 @@ export class ResumeEditorPage {
         )
         .subscribe();
     } catch {
-      this.loadError.set('Não foi possível carregar o currículo salvo.');
+      this.loadError.set(this.i18n.t('editor.errorLoad'));
     } finally {
       this.loading.set(false);
     }
@@ -326,7 +328,7 @@ export class ResumeEditorPage {
       const value = this.form.getRawValue();
       const resume: Resume = {
         ...this.resume,
-        title: value.title.trim() || 'Meu currículo',
+        title: value.title.trim() || this.i18n.t('editor.defaultTitle'),
         language: value.language,
         personalInfo: {
           fullName: value.personalInfo.fullName.trim(),

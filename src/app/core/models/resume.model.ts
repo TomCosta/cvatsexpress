@@ -1,5 +1,16 @@
 export type ResumeLanguage = 'pt-BR' | 'en-US' | 'es-ES' | 'es-419';
 
+const RESUME_LANGUAGES: readonly ResumeLanguage[] = [
+  'pt-BR',
+  'en-US',
+  'es-ES',
+  'es-419',
+];
+
+export function isResumeLanguage(value: unknown): value is ResumeLanguage {
+  return RESUME_LANGUAGES.includes(value as ResumeLanguage);
+}
+
 export interface PersonalInfo {
   fullName: string;
   email?: string;
@@ -104,12 +115,13 @@ export function createEmptyResume(
   id: string,
   language: ResumeLanguage,
   now = new Date(),
+  defaultTitle = 'Meu currículo',
 ): Resume {
   const timestamp = now.toISOString();
 
   return {
     id,
-    title: 'Meu currículo',
+    title: defaultTitle,
     language,
     personalInfo: { fullName: '' },
     experiences: [],

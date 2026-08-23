@@ -10,6 +10,9 @@ export interface ResumeCopy {
   current: string;
   roleFallback: string;
   courseFallback: string;
+  nameFallback: string;
+  documentTitle: string;
+  documentSubject: string;
 }
 
 const COPY: Record<ResumeLanguage, ResumeCopy> = {
@@ -17,25 +20,29 @@ const COPY: Record<ResumeLanguage, ResumeCopy> = {
     summary: 'Resumo profissional', experience: 'Experiência profissional',
     education: 'Formação', skills: 'Competências', languages: 'Idiomas',
     courses: 'Cursos e certificações', current: 'Atual', roleFallback: 'Cargo',
-    courseFallback: 'Curso',
+    courseFallback: 'Curso', nameFallback: 'Seu nome', documentTitle: 'Currículo',
+    documentSubject: 'Currículo profissional',
   },
   'en-US': {
     summary: 'Professional summary', experience: 'Professional experience',
     education: 'Education', skills: 'Skills', languages: 'Languages',
     courses: 'Courses and certifications', current: 'Present', roleFallback: 'Role',
-    courseFallback: 'Course',
+    courseFallback: 'Course', nameFallback: 'Your name', documentTitle: 'Resume',
+    documentSubject: 'Professional resume',
   },
   'es-ES': {
     summary: 'Resumen profesional', experience: 'Experiencia profesional',
     education: 'Formación', skills: 'Competencias', languages: 'Idiomas',
     courses: 'Cursos y certificaciones', current: 'Actualidad', roleFallback: 'Puesto',
-    courseFallback: 'Curso',
+    courseFallback: 'Curso', nameFallback: 'Tu nombre', documentTitle: 'Currículum',
+    documentSubject: 'Currículum profesional',
   },
   'es-419': {
     summary: 'Resumen profesional', experience: 'Experiencia profesional',
     education: 'Educación', skills: 'Habilidades', languages: 'Idiomas',
     courses: 'Cursos y certificaciones', current: 'Actualidad', roleFallback: 'Puesto',
-    courseFallback: 'Curso',
+    courseFallback: 'Curso', nameFallback: 'Tu nombre', documentTitle: 'Currículum',
+    documentSubject: 'Currículum profesional',
   },
 };
 

@@ -2,7 +2,7 @@
 @let labels = copy(data.language);
 <article class="resume" [class.resume--modern]="templateId() === 'modern-ats'">
   <header class="resume__header">
-    <h1>{{ data.personalInfo.fullName || 'Seu nome' }}</h1>
+    <h1>{{ data.personalInfo.fullName || labels.nameFallback }}</h1>
     @if (data.targetRole) {
       <p class="resume__role">{{ data.targetRole }}</p>
     }

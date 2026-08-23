@@ -134,9 +134,9 @@ export function buildResumePdfDocument(
 
   return {
     info: {
-      title: resume.title || 'Currículo',
+      title: resume.title || labels.documentTitle,
       author: resume.personalInfo.fullName || undefined,
-      subject: 'Currículo profissional',
+      subject: labels.documentSubject,
     },
     pageSize: 'A4',
     pageMargins: [48, 44, 48, 44],
@@ -170,6 +170,7 @@ export function buildResumePdfDocument(
 }
 
 function buildHeader(resume: Resume): ContentStack {
+  const labels = getResumeCopy(resume.language);
   const location = [
     resume.personalInfo.city,
     resume.personalInfo.state,
@@ -187,7 +188,7 @@ function buildHeader(resume: Resume): ContentStack {
 
   return {
     stack: [
-      { text: resume.personalInfo.fullName || 'Seu nome', style: 'name' },
+      { text: resume.personalInfo.fullName || labels.nameFallback, style: 'name' },
       ...(resume.targetRole?.trim()
         ? [{ text: resume.targetRole.trim(), style: 'role' } as Content]
         : []),

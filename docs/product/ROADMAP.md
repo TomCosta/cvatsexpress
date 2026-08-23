@@ -11,6 +11,7 @@
 - Milestone 6 — PDF e compartilhamento
 - Milestone 7 — qualidade e revisões do MVP
 - Milestone 8 — handoff do MVP offline
+- Incremento 0.3 — localização completa da interface em runtime (`pt-BR`, `en-US`, `es-ES`, `es-419`)
 
 ## Depois do MVP
 

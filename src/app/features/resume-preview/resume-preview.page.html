@@ -1,9 +1,9 @@
 <ion-header>
   <ion-toolbar>
-    <ion-buttons slot="start"><ion-back-button defaultHref="/resumes" text=""></ion-back-button></ion-buttons>
-    <ion-title>Visualizar currículo</ion-title>
+    <ion-buttons slot="start"><ion-back-button defaultHref="/resumes" text="" [attr.aria-label]="i18n.t('common.back')"></ion-back-button></ion-buttons>
+    <ion-title>{{ i18n.t('preview.headerTitle') }}</ion-title>
     @if (resume(); as data) {
-      <ion-buttons slot="end"><ion-button [routerLink]="['/resume', data.id, 'edit']"><ion-icon name="create-outline" slot="start"></ion-icon>Editar</ion-button></ion-buttons>
+      <ion-buttons slot="end"><ion-button [routerLink]="['/resume', data.id, 'edit']"><ion-icon name="create-outline" slot="start"></ion-icon>{{ i18n.t('common.edit') }}</ion-button></ion-buttons>
     }
   </ion-toolbar>
 </ion-header>
@@ -11,54 +11,54 @@
 <ion-content>
   <main class="preview-shell">
     @if (loading()) {
-      <p class="state-message" role="status">Preparando visualização…</p>
+      <p class="state-message" role="status">{{ i18n.t('preview.loading') }}</p>
     } @else if (error() && !resume()) {
-      <section class="state-card" role="alert"><h1>Não foi possível visualizar</h1><p>{{ error() }}</p><ion-button routerLink="/resumes">Voltar aos currículos</ion-button></section>
+      <section class="state-card" role="alert"><h1>{{ i18n.t('preview.errorTitle') }}</h1><p>{{ error() }}</p><ion-button routerLink="/resumes">{{ i18n.t('preview.backToResumes') }}</ion-button></section>
     } @else if (resume(); as data) {
       <section class="preview-controls" aria-labelledby="preview-title">
         <div>
-          <p class="eyebrow">Revisão final</p>
+          <p class="eyebrow">{{ i18n.t('preview.eyebrow') }}</p>
           <h1 id="preview-title">{{ data.title }}</h1>
         </div>
         <div class="preview-controls__actions">
-          <ion-select aria-label="Modelo do currículo" interface="popover" [value]="templateId()" (ionChange)="selectTemplate($event.detail.value)">
+          <ion-select [attr.aria-label]="i18n.t('preview.templateLabel')" interface="popover" [value]="templateId()" (ionChange)="selectTemplate($event.detail.value)">
             @for (template of templates; track template.id) {
               <ion-select-option [value]="template.id">{{ template.name }}</ion-select-option>
             }
           </ion-select>
           <ion-button (click)="exportPdf()" [disabled]="exportState() === 'working' || !canExport(data)">
             <ion-icon name="download-outline" slot="start"></ion-icon>
-            {{ exportState() === 'working' ? 'Gerando…' : 'Baixar / compartilhar PDF' }}
+            {{ exportState() === 'working' ? i18n.t('preview.generating') : i18n.t('preview.export') }}
           </ion-button>
         </div>
       </section>
 
       @if (error()) { <p class="error-message" role="alert">{{ error() }}</p> }
-      @if (exportState() === 'error') { <p class="error-message" role="alert">Não foi possível gerar ou compartilhar o PDF. Tente novamente.</p> }
+      @if (exportState() === 'error') { <p class="error-message" role="alert">{{ i18n.t('preview.exportError') }}</p> }
       @if (exportMessage()) { <p class="success-message" role="status">{{ exportMessage() }}</p> }
-      @if (!canExport(data)) { <p class="warning-message" role="status">Informe seu nome no editor antes de exportar o PDF.</p> }
+      @if (!canExport(data)) { <p class="warning-message" role="status">{{ i18n.t('preview.nameRequired') }}</p> }
 
       <div class="preview-layout">
-        <section class="document-stage" aria-label="Prévia do currículo">
+        <section class="document-stage" [attr.aria-label]="i18n.t('preview.documentLabel')">
           <app-resume-document [resume]="data" [templateId]="templateId()"></app-resume-document>
         </section>
 
         @if (score(); as result) {
           <aside class="ats-panel" aria-labelledby="ats-title">
             <div class="score-heading">
-              <div class="score-ring" [attr.aria-label]="'Pontuação ' + result.score + ' de 100'"><strong>{{ result.score }}</strong><span>/100</span></div>
-              <div><p class="eyebrow">Análise local</p><h2 id="ats-title">ATS-Friendly Score</h2></div>
+              <div class="score-ring" [attr.aria-label]="i18n.t('preview.scoreLabel', { score: result.score })"><strong>{{ result.score }}</strong><span>/100</span></div>
+              <div><p class="eyebrow">{{ i18n.t('preview.localAnalysis') }}</p><h2 id="ats-title">ATS-Friendly Score</h2></div>
             </div>
-            <p class="ats-disclaimer"><ion-icon name="information-circle-outline" aria-hidden="true"></ion-icon>Esta análise é baseada em boas práticas e regras heurísticas. Sistemas de recrutamento podem utilizar critérios diferentes.</p>
+            <p class="ats-disclaimer"><ion-icon name="information-circle-outline" aria-hidden="true"></ion-icon>{{ i18n.t('preview.disclaimer') }}</p>
 
             @if (result.warnings.length) {
-              <section class="finding-group finding-group--warning"><h3><ion-icon name="warning-outline" aria-hidden="true"></ion-icon>Pontos essenciais</h3><ul>@for (finding of result.warnings; track finding.id) { <li>{{ finding.message }}</li> }</ul></section>
+              <section class="finding-group finding-group--warning"><h3><ion-icon name="warning-outline" aria-hidden="true"></ion-icon>{{ i18n.t('preview.essentials') }}</h3><ul>@for (finding of result.warnings; track finding.id) { <li>{{ finding.message }}</li> }</ul></section>
             }
             @if (result.suggestions.length) {
-              <section class="finding-group"><h3>Como melhorar</h3><ul>@for (finding of result.suggestions; track finding.id) { <li>{{ finding.message }}</li> }</ul></section>
+              <section class="finding-group"><h3>{{ i18n.t('preview.improvements') }}</h3><ul>@for (finding of result.suggestions; track finding.id) { <li>{{ finding.message }}</li> }</ul></section>
             }
             @if (result.strengths.length) {
-              <section class="finding-group finding-group--strength"><h3><ion-icon name="checkmark-circle-outline" aria-hidden="true"></ion-icon>Pontos fortes</h3><ul>@for (finding of result.strengths; track finding.id) { <li>{{ finding.message }}</li> }</ul></section>
+              <section class="finding-group finding-group--strength"><h3><ion-icon name="checkmark-circle-outline" aria-hidden="true"></ion-icon>{{ i18n.t('preview.strengths') }}</h3><ul>@for (finding of result.strengths; track finding.id) { <li>{{ finding.message }}</li> }</ul></section>
             }
           </aside>
         }

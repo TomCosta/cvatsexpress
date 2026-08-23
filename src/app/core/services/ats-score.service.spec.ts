@@ -66,6 +66,27 @@ describe('ATSScoreService', () => {
     expect(result.strengths.map((item) => item.id)).not.toContain('education');
   });
 
+  it('localizes findings and recognizes Spanish action verbs', () => {
+    const resume = createEmptyResume('resume-es', 'es-ES');
+    resume.experiences = [
+      {
+        id: 'experience-es',
+        company: 'Empresa',
+        role: 'Desarrolladora',
+        current: true,
+        description:
+          'Lideré la implementación de mejoras y optimicé los procesos del equipo con resultados medibles.',
+      },
+    ];
+
+    const result = service.calculate(resume, 'es-ES');
+
+    expect(
+      result.strengths.find((item) => item.id === 'action-verbs')?.message,
+    ).toBe('Las descripciones usan verbos de acción.');
+    expect(result.warnings[0].message).toContain('Indica');
+  });
+
   function completeResume(): Resume {
     const resume = createEmptyResume('complete', 'pt-BR');
     resume.personalInfo = {

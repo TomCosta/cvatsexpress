@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import {
   IonButton,
@@ -17,6 +17,7 @@ import {
 } from 'ionicons/icons';
 
 import { AppHeaderComponent } from '../shared/components/app-header/app-header.component';
+import { AppLanguageService } from '../core/i18n/app-language.service';
 
 @Component({
   selector: 'app-home',
@@ -33,6 +34,8 @@ import { AppHeaderComponent } from '../shared/components/app-header/app-header.c
   ],
 })
 export class HomePage {
+  protected readonly i18n = inject(AppLanguageService);
+
   constructor() {
     addIcons({
       arrowForwardOutline,

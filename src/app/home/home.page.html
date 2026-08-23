@@ -3,49 +3,46 @@
   <main class="home-shell">
     <section class="hero" aria-labelledby="hero-title">
       <ion-text color="primary">
-        <p class="eyebrow">Seu currículo, do seu jeito</p>
+        <p class="eyebrow">{{ i18n.t('home.eyebrow') }}</p>
       </ion-text>
 
-      <h1 id="hero-title">Um currículo profissional em poucos minutos.</h1>
-      <p class="hero__copy">
-        Organize sua trajetória em um formato claro, ATS-friendly e pronto para
-        compartilhar — sem upload automático dos seus dados.
-      </p>
+      <h1 id="hero-title">{{ i18n.t('home.title') }}</h1>
+      <p class="hero__copy">{{ i18n.t('home.description') }}</p>
 
       <div class="actions">
         <ion-button expand="block" size="large" routerLink="/resume/new">
           <ion-icon name="document-text-outline" slot="start"></ion-icon>
-          Criar meu currículo
+          {{ i18n.t('home.create') }}
           <ion-icon name="arrow-forward-outline" slot="end"></ion-icon>
         </ion-button>
         <ion-button expand="block" size="large" fill="outline" routerLink="/resumes">
           <ion-icon name="folder-open-outline" slot="start"></ion-icon>
-          Meus currículos
+          {{ i18n.t('home.myResumes') }}
         </ion-button>
       </div>
 
     </section>
 
-    <section class="trust" aria-label="Benefícios do aplicativo">
+    <section class="trust" [attr.aria-label]="i18n.t('home.benefitsLabel')">
       <article>
         <ion-icon name="checkmark-circle-outline" aria-hidden="true"></ion-icon>
         <div>
-          <h2>Formato ATS-friendly</h2>
-          <p>Estrutura simples, profissional e fácil de ler.</p>
+          <h2>{{ i18n.t('home.atsTitle') }}</h2>
+          <p>{{ i18n.t('home.atsDescription') }}</p>
         </div>
       </article>
       <article>
         <ion-icon name="cloud-offline-outline" aria-hidden="true"></ion-icon>
         <div>
-          <h2>Funciona offline</h2>
-          <p>Crie e edite sem depender de conexão.</p>
+          <h2>{{ i18n.t('home.offlineTitle') }}</h2>
+          <p>{{ i18n.t('home.offlineDescription') }}</p>
         </div>
       </article>
       <article>
         <ion-icon name="shield-checkmark-outline" aria-hidden="true"></ion-icon>
         <div>
-          <h2>Privacidade primeiro</h2>
-          <p>Nenhum dado é enviado automaticamente; você decide quando compartilhar.</p>
+          <h2>{{ i18n.t('home.privacyTitle') }}</h2>
+          <p>{{ i18n.t('home.privacyDescription') }}</p>
         </div>
       </article>
     </section>

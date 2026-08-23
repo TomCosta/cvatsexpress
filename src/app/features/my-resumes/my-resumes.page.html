@@ -1,9 +1,9 @@
 <ion-header>
   <ion-toolbar>
-    <ion-buttons slot="start"><ion-back-button defaultHref="/home" text=""></ion-back-button></ion-buttons>
-    <ion-title>Meus currículos</ion-title>
+    <ion-buttons slot="start"><ion-back-button defaultHref="/home" text="" [attr.aria-label]="i18n.t('common.back')"></ion-back-button></ion-buttons>
+    <ion-title>{{ i18n.t('library.headerTitle') }}</ion-title>
     <ion-buttons slot="end">
-      <ion-button routerLink="/resume/new"><ion-icon name="add-outline" slot="start"></ion-icon>Novo</ion-button>
+      <ion-button routerLink="/resume/new"><ion-icon name="add-outline" slot="start"></ion-icon>{{ i18n.t('common.new') }}</ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
@@ -11,38 +11,38 @@
 <ion-content>
   <main class="resumes-shell">
     <header class="page-heading">
-      <p class="eyebrow">Biblioteca local</p>
-      <h1>Seus currículos</h1>
-      <p>Edite, duplique e exporte sem enviar dados para a nuvem.</p>
+      <p class="eyebrow">{{ i18n.t('library.eyebrow') }}</p>
+      <h1>{{ i18n.t('library.title') }}</h1>
+      <p>{{ i18n.t('library.description') }}</p>
     </header>
 
     @if (error()) { <p class="error-message" role="alert">{{ error() }}</p> }
 
     @if (loading()) {
-      <p class="state-message" role="status">Carregando…</p>
+      <p class="state-message" role="status">{{ i18n.t('library.loading') }}</p>
     } @else if (!resumes().length) {
       <section class="empty-state">
         <ion-icon name="document-text-outline" aria-hidden="true"></ion-icon>
-        <h2>Crie seu primeiro currículo</h2>
-        <p>Preencha sua trajetória uma vez e mantenha tudo salvo neste dispositivo.</p>
-        <ion-button routerLink="/resume/new" size="large"><ion-icon name="add-outline" slot="start"></ion-icon>Criar currículo</ion-button>
+        <h2>{{ i18n.t('library.emptyTitle') }}</h2>
+        <p>{{ i18n.t('library.emptyDescription') }}</p>
+        <ion-button routerLink="/resume/new" size="large"><ion-icon name="add-outline" slot="start"></ion-icon>{{ i18n.t('library.create') }}</ion-button>
       </section>
     } @else {
-      <section class="resume-grid" aria-label="Currículos salvos">
+      <section class="resume-grid" [attr.aria-label]="i18n.t('library.savedLabel')">
         @for (resume of resumes(); track resume.id) {
           <article class="resume-card">
             <div class="resume-card__icon" aria-hidden="true"><ion-icon name="document-text-outline"></ion-icon></div>
             <div class="resume-card__content">
               <h2>{{ resume.title }}</h2>
-              <p>{{ resume.targetRole || 'Cargo ainda não informado' }} · {{ templateName(resume.templateId) }}</p>
-              <small>Atualizado em {{ resume.updatedAt | date:'dd/MM/yyyy, HH:mm' }}</small>
+              <p>{{ resume.targetRole || i18n.t('library.roleMissing') }} · {{ templateName(resume.templateId) }}</p>
+              <small>{{ i18n.t('library.updatedAt', { date: formattedDate(resume.updatedAt) }) }}</small>
             </div>
             <div class="resume-card__actions">
-              <ion-button fill="solid" size="small" [routerLink]="['/resume', resume.id, 'edit']"><ion-icon name="create-outline" slot="start"></ion-icon>Editar</ion-button>
-              <ion-button fill="outline" size="small" [routerLink]="['/resume', resume.id, 'preview']"><ion-icon name="eye-outline" slot="start"></ion-icon>Visualizar</ion-button>
-              <ion-button fill="clear" size="small" (click)="rename(resume)">Renomear</ion-button>
-              <ion-button fill="clear" size="small" (click)="duplicate(resume)"><ion-icon name="copy-outline" slot="start"></ion-icon>Duplicar</ion-button>
-              <ion-button fill="clear" size="small" color="danger" (click)="confirmDelete(resume)"><ion-icon name="trash-outline" slot="start"></ion-icon>Excluir</ion-button>
+              <ion-button fill="solid" size="small" [routerLink]="['/resume', resume.id, 'edit']"><ion-icon name="create-outline" slot="start"></ion-icon>{{ i18n.t('common.edit') }}</ion-button>
+              <ion-button fill="outline" size="small" [routerLink]="['/resume', resume.id, 'preview']"><ion-icon name="eye-outline" slot="start"></ion-icon>{{ i18n.t('common.view') }}</ion-button>
+              <ion-button fill="clear" size="small" (click)="rename(resume)">{{ i18n.t('common.rename') }}</ion-button>
+              <ion-button fill="clear" size="small" (click)="duplicate(resume)"><ion-icon name="copy-outline" slot="start"></ion-icon>{{ i18n.t('common.duplicate') }}</ion-button>
+              <ion-button fill="clear" size="small" color="danger" (click)="confirmDelete(resume)"><ion-icon name="trash-outline" slot="start"></ion-icon>{{ i18n.t('common.delete') }}</ion-button>
             </div>
           </article>
         }

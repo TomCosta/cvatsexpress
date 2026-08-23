@@ -30,3 +30,30 @@ ion-toolbar {
 .brand__mark ion-icon {
   font-size: 21px;
 }
+
+.language-button {
+  min-height: 44px;
+  font-size: 0.78rem;
+  font-weight: 750;
+}
+
+@media (max-width: 360px) {
+  ion-toolbar {
+    --padding-start: max(6px, env(safe-area-inset-left));
+    --padding-end: max(4px, env(safe-area-inset-right));
+  }
+
+  .brand {
+    gap: 7px;
+    font-size: 0.9rem;
+  }
+
+  .brand__mark {
+    width: 32px;
+    height: 32px;
+  }
+
+  .language-button {
+    font-size: 0.7rem;
+  }
+}

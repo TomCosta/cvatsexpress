@@ -121,6 +121,21 @@ describe('LocalResumeRepository', () => {
     );
   });
 
+  it('rejects a saved resume with an unsupported language', async () => {
+    const resume = createEmptyResume('resume-invalid-language', 'pt-BR');
+    storage.values.set(
+      LOCAL_DATABASE_KEY,
+      JSON.stringify({
+        schemaVersion: 1,
+        resumes: [{ ...resume, language: 'fr-FR' }],
+      }),
+    );
+
+    await expectAsync(repository.list()).toBeRejectedWithError(
+      /currículo salvo possui formato inválido/,
+    );
+  });
+
   it('serializes concurrent saves without losing a resume', async () => {
     storage.writeDelay = 10;
     const first = createEmptyResume('resume-1', 'pt-BR');

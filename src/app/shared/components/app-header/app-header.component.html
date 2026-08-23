@@ -8,5 +8,15 @@
         <span>{{ appName }}</span>
       </span>
     </ion-title>
+    <ion-buttons slot="end">
+      <ion-button
+        class="language-button"
+        (click)="openLanguageSelector()"
+        [attr.aria-label]="i18n.t('language.openSelector')"
+      >
+        <ion-icon name="language-outline" slot="start" aria-hidden="true"></ion-icon>
+        {{ currentLanguageLabel() }}
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>

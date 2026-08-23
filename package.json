@@ -1,6 +1,6 @@
 {
   "name": "cv-ats-express",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Aplicativo Android offline-first para criação de currículos ATS-friendly.",
   "scripts": {
     "ng": "ng",

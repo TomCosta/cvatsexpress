@@ -6,20 +6,25 @@ import {
   hasExperienceContent,
   type Resume,
 } from '../models/resume.model';
+import {
+  type AppLanguage,
+  type AppTranslationKey,
+  translate,
+} from '../i18n/app-translations';
 
 interface ScoreRule {
   id: string;
   points: number;
   passes: (resume: Resume) => boolean;
-  strength: string;
-  suggestion: string;
+  strengthKey: AppTranslationKey;
+  suggestionKey: AppTranslationKey;
   warning?: boolean;
 }
 
 @Injectable({ providedIn: 'root' })
 export class ATSScoreService {
   private readonly actionVerbs =
-    /\b(liderei|implementei|desenvolvi|criei|aumentei|reduzi|otimizei|gerenciei|coordenei|alcancei|entreguei|automatizei|analyzed|built|created|developed|increased|led|managed|optimized|reduced)\b/i;
+    /(?:^|[\s.,;:!?])(liderei|implementei|desenvolvi|criei|aumentei|reduzi|otimizei|gerenciei|coordenei|alcancei|entreguei|automatizei|analyzed|built|created|developed|increased|led|managed|optimized|reduced|lideré|implementé|desarrollé|creé|aumenté|reduje|optimicé|gestioné|coordiné|alcancé|entregué|automaticé)(?=$|[\s.,;:!?])/i;
 
   private readonly rules: readonly ScoreRule[] = [
     {
@@ -31,31 +36,30 @@ export class ATSScoreService {
             resume.personalInfo.email?.trim() &&
             resume.personalInfo.phone?.trim(),
         ),
-      strength: 'Informações de contato completas.',
-      suggestion: 'Informe nome, email e telefone.',
+      strengthKey: 'ats.contact.strength',
+      suggestionKey: 'ats.contact.suggestion',
       warning: true,
     },
     {
       id: 'target-role',
       points: 5,
       passes: (resume) => Boolean(resume.targetRole?.trim()),
-      strength: 'Cargo desejado informado.',
-      suggestion: 'Adicione o cargo desejado para dar foco ao currículo.',
+      strengthKey: 'ats.targetRole.strength',
+      suggestionKey: 'ats.targetRole.suggestion',
     },
     {
       id: 'summary',
       points: 10,
       passes: (resume) => (resume.professionalSummary?.trim().length ?? 0) >= 80,
-      strength: 'Resumo profissional com bom nível de detalhe.',
-      suggestion: 'Escreva um resumo específico com pelo menos 80 caracteres.',
+      strengthKey: 'ats.summary.strength',
+      suggestionKey: 'ats.summary.suggestion',
     },
     {
       id: 'experience',
       points: 20,
       passes: (resume) => resume.experiences.some(hasExperienceContent),
-      strength: 'Experiência profissional encontrada.',
-      suggestion:
-        'Adicione experiência profissional, projeto relevante ou trabalho voluntário.',
+      strengthKey: 'ats.experience.strength',
+      suggestionKey: 'ats.experience.suggestion',
     },
     {
       id: 'experience-description',
@@ -65,22 +69,22 @@ export class ATSScoreService {
         resume.experiences.filter(hasExperienceContent).every(
           (experience) => experience.description.trim().length >= 40,
         ),
-      strength: 'Experiências possuem descrições consistentes.',
-      suggestion: 'Detalhe responsabilidades e resultados em cada experiência.',
+      strengthKey: 'ats.experienceDescription.strength',
+      suggestionKey: 'ats.experienceDescription.suggestion',
     },
     {
       id: 'education',
       points: 10,
       passes: (resume) => resume.education.some(hasEducationContent),
-      strength: 'Formação informada.',
-      suggestion: 'Inclua sua formação ou curso principal quando aplicável.',
+      strengthKey: 'ats.education.strength',
+      suggestionKey: 'ats.education.suggestion',
     },
     {
       id: 'skills',
       points: 15,
       passes: (resume) => resume.skills.length >= 5,
-      strength: 'Boa quantidade de competências relevantes.',
-      suggestion: 'Adicione pelo menos cinco competências relevantes para a vaga.',
+      strengthKey: 'ats.skills.strength',
+      suggestionKey: 'ats.skills.suggestion',
     },
     {
       id: 'action-verbs',
@@ -89,8 +93,8 @@ export class ATSScoreService {
         resume.experiences.filter(hasExperienceContent).some((experience) =>
           this.actionVerbs.test(experience.description),
         ),
-      strength: 'Descrições usam verbos de ação.',
-      suggestion: 'Comece realizações com verbos de ação, como “implementei” ou “liderei”.',
+      strengthKey: 'ats.actionVerbs.strength',
+      suggestionKey: 'ats.actionVerbs.suggestion',
     },
     {
       id: 'length',
@@ -99,8 +103,8 @@ export class ATSScoreService {
         const length = this.resumeText(resume).length;
         return length >= 500 && length <= 6000;
       },
-      strength: 'Quantidade de conteúdo adequada para leitura.',
-      suggestion: 'Adicione conteúdo objetivo; evite um currículo curto ou longo demais.',
+      strengthKey: 'ats.length.strength',
+      suggestionKey: 'ats.length.suggestion',
     },
     {
       id: 'links',
@@ -110,8 +114,8 @@ export class ATSScoreService {
           resume.personalInfo.linkedin?.trim() ||
             resume.personalInfo.portfolio?.trim(),
         ),
-      strength: 'Link profissional informado.',
-      suggestion: 'Inclua LinkedIn ou portfólio quando relevante.',
+      strengthKey: 'ats.links.strength',
+      suggestionKey: 'ats.links.suggestion',
     },
     {
       id: 'critical-fields',
@@ -123,13 +127,13 @@ export class ATSScoreService {
               resume.personalInfo.phone?.trim()) &&
             resume.templateId,
         ),
-      strength: 'Nenhum campo crítico está vazio.',
-      suggestion: 'Preencha nome e ao menos uma forma de contato.',
+      strengthKey: 'ats.criticalFields.strength',
+      suggestionKey: 'ats.criticalFields.suggestion',
       warning: true,
     },
   ];
 
-  calculate(resume: Resume): ATSScoreResult {
+  calculate(resume: Resume, language: AppLanguage = 'pt-BR'): ATSScoreResult {
     let score = 0;
     const strengths: ATSFinding[] = [];
     const warnings: ATSFinding[] = [];
@@ -138,10 +142,16 @@ export class ATSScoreService {
     for (const rule of this.rules) {
       if (rule.passes(resume)) {
         score += rule.points;
-        strengths.push(this.finding(rule, 'strength', rule.strength));
+        strengths.push(
+          this.finding(rule, 'strength', translate(language, rule.strengthKey)),
+        );
       } else {
         const kind = rule.warning ? 'warning' : 'suggestion';
-        const finding = this.finding(rule, kind, rule.suggestion);
+        const finding = this.finding(
+          rule,
+          kind,
+          translate(language, rule.suggestionKey),
+        );
         (kind === 'warning' ? warnings : suggestions).push(finding);
       }
     }

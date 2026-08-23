@@ -12,20 +12,26 @@ import {
   type PdfExportResult,
 } from '../../core/services/pdf-generator.service';
 import { buildResumePdfDocument } from '../../core/services/resume-pdf-document';
+import {
+  type AppLanguage,
+  translate,
+} from '../../core/i18n/app-translations';
 
 @Injectable()
 export class LocalPdfGeneratorService extends PdfGeneratorService {
   override async exportAndShare(
     resume: Resume,
     templateId: ResumeTemplateId,
+    appLanguage: AppLanguage,
   ): Promise<PdfExportResult> {
     pdfMake.addVirtualFileSystem(pdfFonts);
     const pdf = pdfMake.createPdf(buildResumePdfDocument(resume, templateId));
-    const filename = `${this.safeFilename(resume.title || 'curriculo')}.pdf`;
+    const filenameFallback = translate(appLanguage, 'pdf.filenameFallback');
+    const filename = `${this.safeFilename(resume.title, filenameFallback)}.pdf`;
 
     if (!Capacitor.isNativePlatform()) {
       await pdf.download(filename);
-      return { status: 'downloaded', message: 'PDF baixado com sucesso.' };
+      return { status: 'downloaded' };
     }
 
     const availability = await Share.canShare();
@@ -41,10 +47,7 @@ export class LocalPdfGeneratorService extends PdfGeneratorService {
         data: await pdf.getBase64(),
         directory: Directory.Documents,
       });
-      return {
-        status: 'saved',
-        message: 'PDF salvo em Documentos/CV ATS Express.',
-      };
+      return { status: 'saved' };
     }
 
     const directory = 'shared';
@@ -59,15 +62,15 @@ export class LocalPdfGeneratorService extends PdfGeneratorService {
       directory: Directory.Cache,
     });
     await Share.share({
-      title: resume.title || 'Currículo',
-      text: 'Currículo criado no CV ATS Express.',
+      title: resume.title || translate(appLanguage, 'pdf.shareTitle'),
+      text: translate(appLanguage, 'pdf.shareText'),
       files: [file.uri],
-      dialogTitle: 'Compartilhar currículo em PDF',
+      dialogTitle: translate(appLanguage, 'pdf.shareDialog'),
     });
-    return { status: 'shared', message: 'PDF pronto para compartilhar.' };
+    return { status: 'shared' };
   }
 
-  private safeFilename(value: string): string {
+  private safeFilename(value: string, fallback = 'resume'): string {
     const normalized = value
       .normalize('NFD')
       .replace(/[\u0300-\u036f]/g, '')
@@ -75,7 +78,7 @@ export class LocalPdfGeneratorService extends PdfGeneratorService {
       .replace(/^-+|-+$/g, '')
       .toLowerCase();
 
-    return normalized || 'curriculo';
+    return normalized || fallback;
   }
 
   private uniqueFilename(filename: string, resumeId: string): string {

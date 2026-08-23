@@ -8,12 +8,12 @@ export const routes: Routes = [
   },
   {
     path: 'home',
-    title: 'CV ATS Express',
+    data: { titleKey: 'route.home' },
     loadComponent: () => import('./home/home.page').then((m) => m.HomePage),
   },
   {
     path: 'resumes',
-    title: 'Meus currículos — CV ATS Express',
+    data: { titleKey: 'route.resumes' },
     loadComponent: () =>
       import('./features/my-resumes/my-resumes.page').then(
         (m) => m.MyResumesPage,
@@ -21,7 +21,7 @@ export const routes: Routes = [
   },
   {
     path: 'resume/new',
-    title: 'Novo currículo — CV ATS Express',
+    data: { titleKey: 'route.newResume' },
     loadComponent: () =>
       import('./features/resume-editor/resume-editor.page').then(
         (m) => m.ResumeEditorPage,
@@ -29,7 +29,7 @@ export const routes: Routes = [
   },
   {
     path: 'resume/:id/edit',
-    title: 'Editar currículo — CV ATS Express',
+    data: { titleKey: 'route.editResume' },
     loadComponent: () =>
       import('./features/resume-editor/resume-editor.page').then(
         (m) => m.ResumeEditorPage,
@@ -37,7 +37,7 @@ export const routes: Routes = [
   },
   {
     path: 'resume/:id/preview',
-    title: 'Visualizar currículo — CV ATS Express',
+    data: { titleKey: 'route.previewResume' },
     loadComponent: () =>
       import('./features/resume-preview/resume-preview.page').then(
         (m) => m.ResumePreviewPage,

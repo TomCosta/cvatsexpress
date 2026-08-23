@@ -37,4 +37,17 @@ describe('buildResumePdfDocument', () => {
     expect(serialized).not.toContain('EXPERIÊNCIA PROFISSIONAL');
     expect(serialized).not.toContain('Cargo');
   });
+
+  it('uses the resume language independently from the app language', () => {
+    const resume = createEmptyResume('resume-en', 'en-US');
+    resume.professionalSummary = 'A concise professional summary.';
+
+    const definition = buildResumePdfDocument(resume, 'classic-ats');
+    const serialized = JSON.stringify(definition);
+
+    expect(serialized).toContain('PROFESSIONAL SUMMARY');
+    expect(serialized).toContain('Your name');
+    expect(definition.info?.subject).toBe('Professional resume');
+    expect(serialized).not.toContain('RESUMO PROFISSIONAL');
+  });
 });

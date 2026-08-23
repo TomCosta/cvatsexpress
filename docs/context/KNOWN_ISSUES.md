@@ -6,7 +6,7 @@ The machine's default Node is 18.14.0, while Angular 20 and Capacitor 8 require 
 
 ## KI-002 — Generated Android branding
 
-Icons, splash assets, displayed native version and release configuration are scaffold defaults. Final branding and Play Store release setup are future work.
+Icons, splash assets and release configuration are scaffold defaults. Final branding and Play Store release setup are future work; the native version is synchronized with package version 0.3.0.
 
 ## KI-003 — Dependency audit findings not triaged
 
@@ -18,11 +18,15 @@ The package installation reported npm audit findings inherited from the current 
 
 ## KI-005 — Android device validation pending
 
-Web smoke inspection, Capacitor sync and APK debug build pass, but keyboard behavior, process restart, file opening and the native share sheet still require a real-device or emulator pass.
+Web smoke inspection, Capacitor sync and APK debug build pass, but system-locale detection, the language modal, keyboard behavior, process restart, file opening and the native share sheet still require a real-device or emulator pass.
 
 ## KI-006 — Angular application builder deadlock
 
 The `application` builder reproducibly aborted inside esbuild 0.28.x with `all goroutines are asleep - deadlock`, including after cache cleanup and a patch override. The supported `browser`/Webpack builder completes production builds. Re-evaluate after a compatible Angular build-tool update.
+
+## KI-007 — Preferences adapter is physically inside core
+
+`PreferencesStorage` implements the correct `KeyValueStorage` boundary, so features do not access Capacitor directly. Its file currently lives in `core/storage` and imports `@capacitor/preferences`, which is inconsistent with the intended physical boundary that keeps native adapters under `infrastructure`. Move it in a focused refactor; no behavior is currently blocked.
 
 ## Resolved during foundation
 

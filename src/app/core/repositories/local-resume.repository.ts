@@ -4,7 +4,7 @@ import {
   CURRENT_SCHEMA_VERSION,
   type LocalDatabase,
 } from '../models/local-database.model';
-import type { Resume } from '../models/resume.model';
+import { isResumeLanguage, type Resume } from '../models/resume.model';
 import { KeyValueStorage } from '../storage/key-value.storage';
 import { ResumeRepository } from './resume.repository';
 
@@ -47,7 +47,7 @@ export class LocalResumeRepository extends ResumeRepository {
     });
   }
 
-  override duplicate(id: string): Promise<Resume> {
+  override duplicate(id: string, copyLabel = 'cópia'): Promise<Resume> {
     return this.enqueueMutation(async () => {
       const database = await this.loadDatabase();
       const source = database.resumes.find((resume) => resume.id === id);
@@ -59,7 +59,7 @@ export class LocalResumeRepository extends ResumeRepository {
       const duplicate: Resume = {
         ...this.clone(source),
         id: crypto.randomUUID(),
-        title: `${source.title} — cópia`,
+        title: `${source.title} — ${copyLabel}`,
         createdAt: timestamp,
         updatedAt: timestamp,
       };
@@ -153,7 +153,7 @@ export class LocalResumeRepository extends ResumeRepository {
     return Boolean(
       typeof value['id'] === 'string' &&
         typeof value['title'] === 'string' &&
-        typeof value['language'] === 'string' &&
+        isResumeLanguage(value['language']) &&
         this.isRecord(personalInfo) &&
         typeof personalInfo['fullName'] === 'string' &&
         Array.isArray(value['experiences']) &&

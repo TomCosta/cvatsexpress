@@ -1,6 +1,6 @@
 # CV ATS Express
 
-Aplicativo Android offline-first para criar currículos profissionais e ATS-friendly em poucos minutos. A versão 0.2.0 entrega o primeiro MVP funcional sem cadastro, backend ou dependência de internet.
+Aplicativo Android offline-first para criar currículos profissionais e ATS-friendly em poucos minutos. A versão 0.3.0 entrega o MVP funcional e multilíngue sem cadastro, backend ou dependência de internet.
 
 ## Estado atual
 
@@ -8,7 +8,9 @@ Aplicativo Android offline-first para criar currículos profissionais e ATS-frie
 - Capacitor 8, plataforma Android sincronizada e build debug validado
 - editor completo com autosave local via Capacitor Preferences
 - gestão de currículos: criar, editar, renomear, duplicar e excluir
-- Classic ATS e Modern ATS com preview em português, inglês ou espanhol
+- interface completa em português do Brasil, inglês dos Estados Unidos, espanhol da Espanha e espanhol da América Latina
+- detecção do idioma do sistema no primeiro acesso e seletor persistente na Home
+- Classic ATS e Modern ATS com preview nos quatro idiomas suportados
 - ATS-Friendly Score heurístico, com achados e disclaimer
 - PDF com texto selecionável, download web e compartilhamento Android
 - configuração central; IA, billing, anúncios e backend desativados
@@ -37,7 +39,7 @@ npm run android:open
 
 ## Arquitetura
 
-A direção é offline-first com Adapter Pattern e feature flags. Componentes de UI consomem contratos; Preferences e os plugins de arquivo/compartilhamento ficam em adapters. O backend de IA é futuro e opcional.
+A direção é offline-first com Adapter Pattern e feature flags. Componentes de UI consomem contratos; Preferences e os plugins de arquivo/compartilhamento ficam atrás de boundaries. A localização usa catálogo tipado em runtime; idioma dos menus e idioma de cada currículo são independentes. O backend de IA é futuro e opcional.
 
 Versões instaladas estão fixadas em `package-lock.json`. Consulte [documentação](docs/INDEX.md), [estado real](docs/context/PROJECT_STATE.md) e [arquitetura](docs/architecture/ARCHITECTURE.md).
 
