@@ -4,9 +4,9 @@
 
 The machine's default Node is 18.14.0, while Angular 20 and Capacitor 8 require a newer runtime. Run `nvm use` to select the repository's Node 24.19.0 before npm/ng/cap commands.
 
-## KI-002 — Generated Android branding
+## KI-002 — Android splash and release branding incomplete
 
-Icons, splash assets and release configuration are scaffold defaults. Final branding and Play Store release setup are future work; the native version is synchronized with package version 0.3.0.
+Launcher icons are branded in all Android densities, including adaptive, round and Android 13+ themed variants. Splash assets still use the generated scaffold artwork, and release signing/Play Store assets are not configured; the native version is synchronized with package version 0.3.0.
 
 ## KI-003 — Dependency audit findings not triaged
 

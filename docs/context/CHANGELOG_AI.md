@@ -4,17 +4,22 @@
 
 ### Changed
 
+- Substituídos os ícones launcher padrão do scaffold pela identidade CV ATS Express nas densidades `mdpi`, `hdpi`, `xhdpi`, `xxhdpi` e `xxxhdpi`.
+- Geradas variantes legacy, round, foreground adaptativa e monochrome para ícones temáticos do Android 13+, com margem segura para máscaras diferentes de launcher.
+- Adicionado `npm run android:icons`, que recria o conjunto a partir de `assets/cvatsexpress.png` usando apenas o JDK local.
 - O editor agora completa identificadores do LinkedIn com `https://www.linkedin.com/in/` e endereços de portfólio sem protocolo com `https://`.
 - A normalização ocorre ao sair do campo e também antes do autosave, preserva campos vazios e evita duplicar protocolos em URLs completas.
 - Variantes comuns de perfil do LinkedIn são persistidas no formato canônico com HTTPS e `www`.
 
 ### Architecture impact
 
+- A geração de branding é uma ferramenta de build isolada e não altera runtime, contratos ou dados do aplicativo.
 - Nenhum contrato ou schema de persistência foi alterado. A regra determinística e offline foi isolada em `core/models/profile-url.ts` e consumida pelo editor.
 
 ### Validation
 
 - Lint, 64/64 testes Karma, build de produção e `cap sync android` passaram.
+- `lintDebug` e `assembleDebug` validaram os PNGs, adaptive icons e recursos Android 13+.
 
 ## 2026-08-22
 

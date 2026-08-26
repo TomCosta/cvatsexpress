@@ -20,6 +20,7 @@ Last updated: 2026-08-23
 - ATS-Friendly Score offline de 0 a 100, achados separados e disclaimer.
 - PDF textual via pdfmake, download web e Filesystem/Share Android usando arquivo único em cache privado.
 - Android `com.cvatsexpress.app` sincronizado; testes unitários e APK debug validados.
+- Launcher Android usa a identidade CV ATS Express em todas as densidades, com ícones legacy, round, adaptativos e temáticos do Android 13+ reproduzíveis por `npm run android:icons`.
 
 ## Not Implemented
 
@@ -57,7 +58,7 @@ Desligada por configuração. Não há backend, chamada remota, SDK ou segredo.
 
 - `PreferencesStorage` está em `core/storage` e importa Capacitor diretamente. Features continuam isoladas pelo `KeyValueStorage`, mas mover o adapter para `infrastructure/storage` deixaria a direção física de dependências coerente com a arquitetura declarada.
 - O builder `application`/esbuild apresentou deadlock reproduzível; o build usa o builder Angular `browser` (Webpack) como workaround.
-- Branding Android ainda usa assets gerados e release signing não está configurado.
+- Splash Android ainda usa os assets gerados do scaffold e release signing não está configurado; os ícones launcher já estão personalizados.
 - O único teste Android é o smoke test aritmético do scaffold; integração nativa não tem cobertura automatizada.
 
 ## Known Bugs

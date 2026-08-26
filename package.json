@@ -10,6 +10,7 @@
     "test": "ng test",
     "test:ci": "ng test --configuration=ci --browsers=ChromeHeadless",
     "lint": "ng lint",
+    "android:icons": "java -Djava.awt.headless=true --source 21 tools/GenerateAndroidIcons.java",
     "android:sync": "npm run build && cap sync android",
     "android:open": "cap open android"
   },
@@ -45,6 +46,7 @@
     "@angular/cli": "20.3.28",
     "@angular/compiler-cli": "20.3.25",
     "@angular/language-service": "20.3.25",
+    "@capacitor/assets": "^3.0.5",
     "@capacitor/cli": "8.5.0",
     "@eslint/js": "9.39.5",
     "@ionic/angular-toolkit": "^12.0.0",
