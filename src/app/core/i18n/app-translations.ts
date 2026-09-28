@@ -454,6 +454,7 @@ export const APP_LANGUAGES: readonly {
   { value: 'es-ES', nativeName: 'Español (España)', shortLabel: 'ES-ES' },
   { value: 'es-419', nativeName: 'Español (Latinoamérica)', shortLabel: 'ES-LATAM' },
 ];
+// 'pt-BR',  'en-US',  'es-ES',  'es-419'
 
 const translations: Record<AppLanguage, Record<AppTranslationKey, string>> = {
   'pt-BR': ptBR,
