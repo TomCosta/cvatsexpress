@@ -1,5 +1,26 @@
 # AI Change Log
 
+## 2026-09-28
+
+### Added
+
+- Criado em `politicaDePrivacidade/public/` um site estático responsivo com a política de privacidade do CV ATS Express em `pt-BR`, `en-US`, `es-ES` e `es-419`.
+- Criada em `landing-page/public/` uma landing page responsiva e orientada a conversão para o site principal `cv-ats-express.web.app`, com hero, demonstração visual, recursos, fluxo de uso, privacidade, FAQ e CTA do Google Play.
+- A landing page inclui os quatro locales, detecção inicial do sistema com fallback `en-US`, preferência manual persistida, conteúdo SEO semântico, microdados de aplicativo, metadados canônicos/Open Graph/Twitter, `robots.txt`, `sitemap.xml` e web manifest.
+- O texto cobre armazenamento local, PDF e compartilhamento explícito, ausência de conta/backend/anúncios/analytics, controles do usuário, hospedagem da página e contato.
+- Reutilizado o logotipo existente e aplicada a identidade visual em verde-petróleo, azul e ciano.
+- Adicionados `firebase.json` com cabeçalhos de segurança e `README.md` com os passos de prévia e deploy no Firebase Hosting.
+- Adicionado seletor no topo; no primeiro acesso a página detecta o primeiro locale compatível do sistema com fallback em `en-US`, e depois prioriza a preferência manual persistida em `localStorage`.
+- Corrigidos os caminhos após a migração para a raiz `public`: CSS, JavaScript, favicon e logotipo agora usam URLs absolutas da raiz publicada. O Hosting passou a servir também a rota `/privacy-policy` e a excluir `skills-lock.json` do deploy.
+- Associado o `firebase.json` ao novo Hosting site `cv-ats-express-privacy-policy`, com URL esperada `https://cv-ats-express-privacy-policy.web.app/` após o deploy.
+
+### Validation
+
+- JSON do Firebase validado com `jq`, HTML validado com `tidy`, JavaScript validado com `node --check`, caminhos dos recursos verificados e `git diff --check` concluído sem erros.
+- O emulador do Firebase confirmou HTTP 200 para `/privacy-policy`, `/styles.css`, `/language.js` e `/assets/cv-ats-express.png`, incluindo os cabeçalhos de segurança configurados.
+- Na landing page, o emulador confirmou HTTP 200 para HTML, CSS, JavaScript, logotipo, robots, sitemap e manifest; os quatro catálogos possuem as mesmas 74 chaves, e a hero foi inspecionada em capturas desktop e mobile pelo Chrome headless.
+- O deploy não foi executado; ainda falta substituir os marcadores pelo e-mail público de privacidade.
+
 ## 2026-08-23
 
 ### Changed

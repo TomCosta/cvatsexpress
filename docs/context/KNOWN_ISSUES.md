@@ -28,6 +28,14 @@ The `application` builder reproducibly aborted inside esbuild 0.28.x with `all g
 
 `PreferencesStorage` implements the correct `KeyValueStorage` boundary, so features do not access Capacitor directly. Its file currently lives in `core/storage` and imports `@capacitor/preferences`, which is inconsistent with the intended physical boundary that keeps native adapters under `infrastructure`. Move it in a focused refactor; no behavior is currently blocked.
 
+## KI-008 — Privacy policy publication pending
+
+The static policy site is prepared in `politicaDePrivacidade/public/` and assigned to Firebase Hosting site `cv-ats-express-privacy-policy`, but it must not be deployed as final while the contact placeholders remain. Replace them with the public privacy email used in Play Console, deploy the site and register the resulting `https://cv-ats-express-privacy-policy.web.app/` URL (or its `/privacy-policy` route) before store submission.
+
+## KI-009 — Landing page deployment and store link pending
+
+The multilingual landing page is prepared in `landing-page/public/` for `https://cv-ats-express.web.app/`, but it has not been deployed. Its Google Play CTA deliberately says “coming soon”; after the store listing becomes public, replace that state with the verified listing URL in all locales, redeploy, validate structured data and submit `/sitemap.xml` through Google Search Console.
+
 ## Resolved during foundation
 
 Android Gradle access initially failed inside the sandbox. After approved native access and the final Capacitor sync, `testDebugUnitTest` and `assembleDebug` completed successfully. This is not a current application issue.

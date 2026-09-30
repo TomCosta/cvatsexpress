@@ -1,0 +1,17 @@
+{
+  "name": "CV ATS Express",
+  "short_name": "CV ATS Express",
+  "description": "Professional ATS-friendly resume builder for Android.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f5f9f8",
+  "theme_color": "#145e50",
+  "icons": [
+    {
+      "src": "/assets/cv-ats-express.png",
+      "sizes": "1200x1200",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}

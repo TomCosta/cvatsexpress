@@ -1,6 +1,6 @@
 # Current Project State
 
-Last updated: 2026-08-23
+Last updated: 2026-09-28
 
 ## Current Version
 
@@ -25,6 +25,12 @@ Last updated: 2026-08-23
 ## Not Implemented
 
 Monetização, anúncios, templates premium, autenticação, cloud sync, analytics, backend, IA e match de vaga.
+
+## Store Publication Preparation
+
+A standalone privacy-policy site is prepared under `politicaDePrivacidade/public/`, with the app logo, responsive styling and Firebase Hosting configuration. The single page provides complete content in `pt-BR`, `en-US`, `es-ES` and `es-419`; it prioritizes a valid saved choice, then detects the first compatible browser/system locale, and falls back to `en-US`. Hosting is explicitly assigned to the site `cv-ats-express-privacy-policy`, whose expected primary URL is `https://cv-ats-express-privacy-policy.web.app/`; the `/privacy-policy` route is also configured, and root-relative assets were validated in the Hosting emulator. It reflects the verified offline behavior and has no analytics or third-party frontend dependencies. Publication remains pending: the placeholders must be replaced with the public privacy contact email, the site must be deployed, and the resulting HTTPS URL must be registered in Play Console.
+
+A separate multilingual product landing page is prepared under `landing-page/public/` for the default Firebase Hosting site `cv-ats-express` and expected URL `https://cv-ats-express.web.app/`. It presents only implemented capabilities, uses the same persisted-locale resolution for `pt-BR`, `en-US`, `es-ES` and `es-419`, and includes responsive marketing content, software-app microdata, canonical/Open Graph metadata, `robots.txt`, `sitemap.xml` and a web manifest. It links to the dedicated privacy site and intentionally shows Google Play as coming soon until a public listing URL exists. Deployment is pending.
 
 ## Current Architecture
 
